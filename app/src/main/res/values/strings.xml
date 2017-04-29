@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Rant</string>
+    <string name="launcher_intro1">尽情吐槽，吐出心中不快。</string>
+    <string name="launcher_intro2">匿名发言，不需在乎身边人看法。</string>
+    <string name="launcher_intro3">给你赞同的内容点赞。</string>
+    <string name="launcher_intro4">分享生活囧事。</string>
+    <string name="launcher_intro5">无聊的时候来看看。</string>
+
+</resources>

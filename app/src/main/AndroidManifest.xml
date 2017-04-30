@@ -9,16 +9,20 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".MainActivity">
-
         </activity>
-
-        <activity android:name=".LauncherActivity"
-                  android:theme="@android:style/Theme.Material.NoActionBar">
+        <activity
+            android:name=".LauncherActivity"
+            android:theme="@android:style/Theme.Material.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
+        </activity>
+
+        <activity android:name=".AuthActivity"
+            android:theme="@style/myMaterialTheme"
+            android:label="注册">
         </activity>
     </application>
 

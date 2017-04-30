@@ -6,4 +6,7 @@
     <string name="launcher_intro4">分享生活囧事。</string>
     <string name="launcher_intro5">无聊的时候来看看。</string>
 
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
 </resources>

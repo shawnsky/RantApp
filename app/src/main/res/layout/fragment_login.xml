@@ -119,6 +119,16 @@
             android:background="@color/colorAccent"/>
     </android.support.v7.widget.CardView>
 
+    <TextView
+        android:id="@+id/fragment_login_tv_null"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="32dp"
+        android:layout_marginRight="32dp"
+        android:visibility="gone"
+        android:text="@string/login_null"
+        android:textColor="@color/colorAccent"/>
+
 
 
 </LinearLayout>

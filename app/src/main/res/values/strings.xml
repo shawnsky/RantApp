@@ -9,6 +9,11 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
+    <!--通用-->
+    <string name="network_error">网络请求失败</string>
+    <string name="http_error">服务器开个小差😅</string>
+    <string name="wait_title">稍等</string>
+
     <!--引导页-->
     <string name="launcher_R">R</string>
     <string name="launcher_reg">开始</string>
@@ -21,8 +26,11 @@
     <string name="register_hint_username">用户名</string>
     <string name="register_hint_password">密码</string>
     <string name="register_hint_confirm_password">确认密码</string>
+    <string name="register_pwd_diff">两次输入的密码不一致。</string>
+    <string name="register_null">不要忘记填写任何一项哦。</string>
     <string name="register_submit">提交</string>
     <string name="register_info">点击提交代表你同意了Rant社区发言规范，请你注册完毕后前往个人中心完善资料。</string>
+    <string name="register_username_exist">此用户名已存在，换个试试。</string>
 
     <!--登陆界面-->
     <string name="login_topic">登录</string>
@@ -30,4 +38,6 @@
     <string name="login_hint_username">用户名</string>
     <string name="login_hint_password">密码</string>
     <string name="login_submit">登录</string>
+    <string name="login_password_wrong">用户名不存在或密码错误</string>
+    <string name="login_null">请输入用户名和密码。</string>
 </resources>

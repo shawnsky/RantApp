@@ -2,16 +2,20 @@ package com.xt.android.rant;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import static android.content.ContentValues.TAG;
 
 
 public class LauncherActivity extends Activity{
@@ -46,37 +50,13 @@ public class LauncherActivity extends Activity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_launcher);
+        guider();
         mLogoTextView= (TextView) findViewById(R.id.launcher_tv_logo);
         mLogoTextView.setTypeface(Typeface.createFromAsset(getAssets(),"MAGNETOB.TTF"));
         mLayout= (RelativeLayout) findViewById(R.id.activity_launcher);
         mIntroTextView= (TextView) findViewById(R.id.launcher_tv_intro);
         mRegButton = (Button)findViewById(R.id.launcher_btn_register);
         mLoginButton = (Button)findViewById(R.id.launcher_btn_login);
-
-        mTimer=new Timer();
-        index = 1;
-        mHandler = new Handler(){
-            @Override
-            public void handleMessage(Message msg) {
-                switch (msg.what){
-                    case UPDATE_PIC_AND_INTRO:
-                        mLayout.setBackground(getResources().getDrawable(pics[index%pics.length]));
-                        mIntroTextView.setText(texts[index%texts.length]);
-                        index++;
-                        break;
-                }
-            }
-        };
-        mTimerTask = new TimerTask() {
-            @Override
-            public void run() {
-                mHandler.sendEmptyMessage(UPDATE_PIC_AND_INTRO);
-            }
-        };
-
-        mTimer.schedule(mTimerTask, 4000, 4000);//每4秒换一次
-
-
         mRegButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -95,6 +75,63 @@ public class LauncherActivity extends Activity{
             }
         });
 
+
+
+
+        mTimer=new Timer();
+        index = 1;
+        mHandler = new Handler(){
+            @Override
+            public void handleMessage(Message msg) {
+                switch (msg.what){
+                    case UPDATE_PIC_AND_INTRO:
+                        mLayout.setBackground(getResources().getDrawable(pics[index%pics.length]));
+                        mIntroTextView.setText(texts[index%texts.length]);
+                        index++;
+                        break;
+                }
+            }
+        };
+
+
+
     }
+
+    private void play(){
+
+        mTimerTask = new TimerTask() {
+            @Override
+            public void run() {
+                mHandler.sendEmptyMessage(UPDATE_PIC_AND_INTRO);
+                Log.i(TAG, "run: changing launcher background picture");
+            }
+        };
+
+        mTimer.schedule(mTimerTask, 4000, 4000);//每4秒换一次
+    }
+
+    private void guider(){
+        SharedPreferences sharedPreferences = getSharedPreferences("token", Activity.MODE_PRIVATE);
+        String token = sharedPreferences.getString("token","");
+        if(!token.equals("")){
+            Intent i = new Intent(LauncherActivity.this, MainActivity.class);
+            startActivity(i);
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mTimerTask.cancel();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        play();
+    }
+
+
+
 
 }

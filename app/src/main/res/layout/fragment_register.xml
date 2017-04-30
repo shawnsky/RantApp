@@ -3,59 +3,164 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               tools:context="com.xt.android.rant.fragment.RegisterFragment"
-              android:orientation="vertical">
+              android:orientation="vertical"
+    android:background="@color/colorPrimary">
 
     <!-- TODO: Update blank fragment layout -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:layout_marginBottom="16dp"
+        android:text="@string/register_topic"
+        android:textStyle="bold"
+        android:textAlignment="center"
+        android:textSize="32sp"
+        android:alpha="0.87"
+        android:textColor="@color/white"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:layout_marginLeft="64dp"
+        android:layout_marginRight="64dp"
+        android:text="@string/register_intro"
+        android:alpha="0.54"
+        android:textColor="@color/white"/>
+
     <!--用户名-->
-    <LinearLayout
+    <android.support.v7.widget.CardView
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        app:cardCornerRadius="8dp"
+        android:layout_marginLeft="32dp"
+        android:layout_marginRight="32dp"
+        android:layout_marginTop="16dp">
 
-        <TextView
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="用户名"/>
+            android:orientation="horizontal">
 
-        <EditText
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:hint="在此输入内容"/>
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_user"
+                android:padding="5dp"/>
 
-    </LinearLayout>
+            <EditText
+                android:id="@+id/fragment_register_et_username"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:layout_marginTop="10dp"
+                android:hint="@string/register_hint_username"/>
+
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>
+
+
     <!--密码-->
-    <LinearLayout
+    <android.support.v7.widget.CardView
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        app:cardCornerRadius="8dp"
+        android:layout_marginLeft="32dp"
+        android:layout_marginRight="32dp"
+        android:layout_marginTop="16dp">
 
-        <TextView
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="密码"/>
+            android:orientation="horizontal">
 
-        <EditText
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:hint="在此输入内容"/>
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_password"
+                android:padding="5dp"/>
 
-    </LinearLayout>
+            <EditText
+                android:id="@+id/fragment_register_et_password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPassword"
+                android:background="@null"
+                android:layout_marginTop="10dp"
+                android:hint="@string/register_hint_password"/>
+
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>
+
     <!--重复密码-->
-    <LinearLayout
+
+    <android.support.v7.widget.CardView
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        app:cardCornerRadius="8dp"
+        android:layout_marginLeft="32dp"
+        android:layout_marginRight="32dp"
+        android:layout_marginTop="16dp">
 
-        <TextView
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="再次输入密码"/>
+            android:orientation="horizontal">
 
-        <EditText
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:hint="在此输入内容"/>
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_password"
+                android:padding="5dp"/>
 
-    </LinearLayout>
+            <EditText
+                android:id="@+id/fragment_register_et_password_confirm"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:inputType="textPassword"
+                android:background="@null"
+                android:hint="@string/register_hint_confirm_password"/>
+
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>
+
+    <!--提交按钮-->
+    <android.support.v7.widget.CardView
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        app:cardCornerRadius="8dp"
+        android:layout_marginLeft="32dp"
+        android:layout_marginRight="32dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginBottom="8dp">
+
+        <Button
+            android:id="@+id/fragment_register_btn_submit"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="@string/register_submit"
+            android:textStyle="bold"
+            android:textSize="20sp"
+            android:textColor="@color/white"
+            android:background="@color/colorAccent"/>
+    </android.support.v7.widget.CardView>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="32dp"
+        android:layout_marginRight="32dp"
+        android:text="@string/register_info"
+        android:alpha="0.87"
+        android:textAlignment="center"
+        android:textColor="@color/white"/>
 
 </LinearLayout>

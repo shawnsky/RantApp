@@ -54,7 +54,7 @@ public class LauncherActivity extends Activity{
         mLoginButton = (Button)findViewById(R.id.launcher_btn_login);
 
         mTimer=new Timer();
-        index = 0;
+        index = 1;
         mHandler = new Handler(){
             @Override
             public void handleMessage(Message msg) {
@@ -96,6 +96,5 @@ public class LauncherActivity extends Activity{
         });
 
     }
-
 
 }

@@ -9,7 +9,9 @@
     </style>
 
     <style name="myMaterialTheme" parent="android:Theme.Material.Light">
-        <item name="android:colorPrimary">@color/colorAccent</item>
+        <item name="android:colorPrimary">@color/colorPrimary</item>
+        <item name="android:colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="android:textColorPrimary">@color/white</item>
 
     </style>
 

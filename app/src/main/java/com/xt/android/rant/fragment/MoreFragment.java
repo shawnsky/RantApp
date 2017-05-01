@@ -85,20 +85,24 @@ public class MoreFragment extends Fragment {
                     .add("token",token)
                     .build();
             Request request = new Request.Builder()
-                    .url("http://120.24.92.198:8080/rant/api/logout.action")
+                    .url("http://10.0.2.2:8080/api/logout.action")
                     .post(formBody)
                     .build();
             Call call = mClient.newCall(request);
             call.enqueue(new Callback() {
                 @Override
                 public void onFailure(Call call, IOException e) {
-                    //这里有漏洞，有空再改
+
+                    // FIXME: 2017/5/1 这里需要修改，数据库没有删除Token，影响不大，有空再改。
+
                     toLogin();
                 }
 
                 @Override
                 public void onResponse(Call call, Response response) throws IOException {
-                    //不严密，有空再改
+
+                    // FIXME: 2017/5/1 这里需要再判断返回的确认码，影响不大，有空再改。
+
                     toLogin();
                 }
             });

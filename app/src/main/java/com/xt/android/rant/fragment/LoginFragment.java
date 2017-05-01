@@ -10,6 +10,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.provider.Settings;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -125,7 +126,7 @@ public class LoginFragment extends Fragment {
                 .add("device",deviceMd5)
                 .build();
         Request request = new Request.Builder()
-                .url("http://10.0.2.2:8080/api/login.action")
+                .url("http://120.24.92.198:8080/rant/api/login.action")
                 .post(formBody)
                 .build();
         Call call = mClient.newCall(request);
@@ -138,6 +139,7 @@ public class LoginFragment extends Fragment {
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 String body = response.body().string();
+                Log.i(TAG, "onResponse: "+body);
                 //遇到http错误
                 if(body.contains("<html>")){
                     mHandler.sendEmptyMessage(MSG_ERROR_HTTP);

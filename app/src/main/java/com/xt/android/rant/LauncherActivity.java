@@ -131,6 +131,16 @@ public class LauncherActivity extends Activity{
         play();
     }
 
+    //防止登出后按后退回到之前界面
+    @Override
+    public void onBackPressed() {
+//        super.onBackPressed();
+        Intent i = new Intent(Intent.ACTION_MAIN);
+        i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        i.addCategory(Intent.CATEGORY_HOME);
+        startActivity(i);
+    }
+
 
 
 

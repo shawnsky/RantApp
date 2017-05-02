@@ -127,10 +127,7 @@ public class NewFragment extends Fragment {
 
     private void convertJson2UI(String body){
         Gson gson = new Gson();
-        Log.i(TAG, "convertJson2UI: "+body);
         List<RantItem> rantItemList = gson.fromJson(body, new TypeToken<List<RantItem>>(){}.getType());
-        if (rantItemList==null) Log.i(TAG, "convertJson2UI: NULLLLLLLLLL");
-        Log.i(TAG, "convertsize"+rantItemList.size());
         NewAdapter adapter = new NewAdapter(rantItemList);
         mRecyclerView.setAdapter(adapter);
     }

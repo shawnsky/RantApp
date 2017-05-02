@@ -16,22 +16,31 @@
 
         <ImageView
             android:id="@+id/item_rant_item_btn_up"
-            android:layout_width="40dp"
+            android:layout_width="30dp"
             android:layout_height="30dp"
-            android:background="?android:attr/selectableItemBackgroundBorderless"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/custom_circle"
+            android:tint="@color/white"
             android:src="@drawable/ic_rant_up"/>
         <TextView
             android:id="@+id/item_rant_item_tv_value"
-            android:layout_width="40dp"
+            android:layout_width="30dp"
             android:layout_height="wrap_content"
-            android:textColor="@color/black"
-            android:alpha="0.87"
+            android:layout_marginStart="8dp"
+            android:textColor="@color/colorPrimaryLight"
+
+            android:textStyle="bold"
             tools:text="11"
             android:textAlignment="center"/>
         <ImageView
             android:id="@+id/item_rant_item_btn_down"
-            android:layout_width="40dp"
+            android:layout_width="30dp"
             android:layout_height="30dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginBottom="8dp"
+            android:background="@drawable/custom_circle"
+            android:tint="@color/white"
             android:src="@drawable/ic_rant_down"/>
 
 
@@ -69,9 +78,25 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"
                 tools:text="达康书记"
-                android:textColor="@color/black"
-                android:alpha="0.54"
+                android:textColor="@color/colorPrimaryLight"
                 android:textStyle="bold"/>
+
+            <TextView
+                android:id="@+id/item_rant_item_tv_sendBy"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text="发表于"
+                android:textColor="@color/colorPrimaryLight"
+                android:layout_toEndOf="@id/item_rant_item_tv_name"/>
+
+            <TextView
+                android:id="@+id/item_rant_item_tv_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="两天前"
+                android:textColor="@color/colorPrimaryLight"
+                android:layout_toEndOf="@id/item_rant_item_tv_sendBy"/>
 
             <TextView
                 android:id="@+id/item_rant_item_tv_comment_num"

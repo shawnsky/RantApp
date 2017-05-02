@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content">
+
+    <RelativeLayout
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp">
+        <!--User info-->
+        <ImageView
+            android:id="@+id/item_comment_iv_avatar"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            tools:background="#aaa"
+            />
+        <TextView
+            android:id="@+id/item_comment_tv_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_toEndOf="@id/item_comment_iv_avatar"
+            android:textSize="12sp"
+            tools:text="达康书记"
+            android:textColor="@color/colorPrimary"
+            android:textStyle="bold"/>
+
+
+
+
+        <TextView
+            android:id="@+id/item_comment_tv_date"
+            android:layout_toEndOf="@id/item_comment_tv_name"
+            android:layout_marginTop="8dp"
+            android:layout_marginStart="16dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="17/5/2"
+            android:textSize="12sp"
+            android:textColor="@color/colorPrimaryLight"
+            />
+
+        <TextView
+            android:id="@+id/item_comment_tv_floor"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="8dp"
+            android:layout_marginStart="16dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="5F"
+            android:textSize="12sp"
+            android:textColor="@color/colorPrimaryLight"
+            />
+
+
+
+
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/item_comment_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="60dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:textColor="@color/black"
+        android:alpha="0.87"
+        tools:text="说得好，我很同意。"/>
+
+</LinearLayout>

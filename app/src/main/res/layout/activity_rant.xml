@@ -1,0 +1,197 @@
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                                 xmlns:tools="http://schemas.android.com/tools"
+                                                 android:layout_width="match_parent"
+                                                 android:layout_height="match_parent"
+                                                 tools:context="com.xt.android.rant.RantActivity"
+                                                 xmlns:app="http://schemas.android.com/apk/res-auto"
+                                                 android:orientation="vertical"
+    android:background="@color/white">
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/activity_rant_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimary"
+            app:contentInsetStart="0dp"
+            app:layout_scrollFlags="scroll|enterAlways|snap">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="Rant"
+                android:textColor="@color/white"
+                android:gravity="center"
+                android:textSize="25sp"/>
+
+        </android.support.v7.widget.Toolbar>
+    </android.support.design.widget.AppBarLayout>
+
+    <ProgressBar
+        android:id="@+id/activity_rant_progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"/>
+
+
+
+    <!--content container-->
+
+
+    <!--button bar-->
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_gravity="bottom">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="这是Button Bar"
+            android:textColor="@color/black"
+            android:textSize="30sp"
+            android:gravity="center"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <!--user info-->
+        <RelativeLayout
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp">
+            <!--User info-->
+            <ImageView
+                android:id="@+id/activity_rant_iv_avatar"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                tools:background="#aaa"
+                />
+            <TextView
+                android:id="@+id/activity_rant_tv_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_toEndOf="@id/activity_rant_iv_avatar"
+                android:textSize="20sp"
+                tools:text="达康书记"
+                android:textColor="@color/colorPrimary"
+                android:textStyle="bold"/>
+
+
+
+            <TextView
+                android:id="@+id/activity_rant_tv_date"
+                android:layout_toEndOf="@id/activity_rant_iv_avatar"
+                android:layout_marginTop="30dp"
+                android:layout_marginStart="16dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="17/5/2"
+                android:textColor="@color/colorPrimaryLight"
+                />
+
+
+        </RelativeLayout>
+
+
+        <!--rant content-->
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            >
+            <!--left-->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                >
+
+                <ImageView
+                    android:id="@+id/activity_rant_btn_up"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:background="@drawable/custom_circle"
+                    android:tint="@color/white"
+                    android:src="@drawable/ic_rant_up"/>
+                <TextView
+                    android:id="@+id/activity_rant_tv_value"
+                    android:layout_width="30dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:textColor="@color/colorPrimaryLight"
+
+                    android:textStyle="bold"
+                    tools:text="11"
+                    android:textAlignment="center"/>
+                <ImageView
+                    android:id="@+id/activity_rant_btn_down"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:background="@drawable/custom_circle"
+                    android:tint="@color/white"
+                    android:src="@drawable/ic_rant_down"/>
+
+
+            </LinearLayout>
+
+            <!--Right-->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:paddingTop="16dp"
+                android:paddingBottom="8dp">
+
+                <!--Content-->
+                <TextView
+                    android:id="@+id/activity_rant_tv_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="16sp"
+                    android:textColor="@color/black"
+                    android:alpha="0.87"
+                    tools:text="这里我们想。"/>
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="4dp"
+            android:background="@color/colorPrimaryLight">
+
+        </FrameLayout>
+
+        <!--Comments-->
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/activity_rant_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        </android.support.v7.widget.RecyclerView>
+
+    </LinearLayout>
+
+</android.support.design.widget.CoordinatorLayout>

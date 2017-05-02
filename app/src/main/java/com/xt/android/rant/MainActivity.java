@@ -24,12 +24,14 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationB
     private MoreFragment mMoreFragment;
     private int index = 0;
 
+    public static MainActivity sMainActivity;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        sMainActivity = this;
 
         BottomNavigationBar mBar  = (BottomNavigationBar) findViewById(R.id.activity_main_navigation_bar);
         mBar.setMode(BottomNavigationBar.MODE_FIXED);

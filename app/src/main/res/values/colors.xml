@@ -3,12 +3,16 @@
     <!--<color name="colorPrimary">#3F51B5</color>-->
     <!--<color name="colorPrimaryDark">#303F9F</color>-->
     <!--<color name="colorAccent">#FF4081</color>-->
-    <color name="colorPrimary">#54556E</color>-->
+    <color name="colorPrimary">#54556E</color>
+    <color name="colorPrimaryLight">#AAAAB8</color>
     <color name="colorPrimaryDark">#000</color>
     <color name="colorAccent">#D55161</color>
 
+
     <color name="colorRegisterButton">#529ECC</color>
     <color name="colorLoginButton">#4CA5A5</color>
+
+
 
 
     <color name="white">#fff</color>

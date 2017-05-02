@@ -7,10 +7,18 @@
     <color name="colorPrimaryLight">#AAAAB8</color>
     <color name="colorPrimaryDark">#000</color>
     <color name="colorAccent">#D55161</color>
+    <color name="colorAccentLight">#e27986</color>
 
 
     <color name="colorRegisterButton">#529ECC</color>
     <color name="colorLoginButton">#4CA5A5</color>
+
+    <color name="wechat_green">#51C332</color>
+    <color name="wechat_green_light">#74d05b</color>
+
+
+    <color name="quan_green">#ededed</color>
+    <color name="quan_green_light">#f9f9f9</color>
 
 
 
@@ -18,4 +26,10 @@
     <color name="white">#fff</color>
     <color name="black">#000</color>
     <color name="gray">#e5e5e5</color>
+
+
+
+    <color name="normal_btn_bg">#4CB849</color>
+    <color name="selected_btn_bg">#0C6609</color>
+
 </resources>

@@ -105,6 +105,7 @@ public class NewFragment extends Fragment {
     private void getData(){
         mClient = new OkHttpClient();
         Request request = new Request.Builder()
+//                .url("http://120.24.92.198:8080/rant/api/allRants.action")
                 .url("http://10.0.2.2:8080/api/allRants.action")
                 .build();
         Call call = mClient.newCall(request);

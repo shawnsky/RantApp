@@ -7,8 +7,10 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -22,6 +24,7 @@ import com.xt.android.rant.wrapper.DetailItem;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.List;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -44,6 +47,7 @@ public class RantActivity extends AppCompatActivity {
     private RecyclerView mCommentsRecyclerView;
     private Toolbar mToolbar;
     private ProgressBar mProgressBar;
+    private LinearLayout mEmptyView;
 
     private int rantId;
     private OkHttpClient mClient;
@@ -58,6 +62,7 @@ public class RantActivity extends AppCompatActivity {
         mToolbar = (Toolbar) findViewById(R.id.activity_rant_toolbar);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
+        mToolbar.setNavigationIcon(R.drawable.ic_action_back);
 
         mAvatarImageView = (ImageView)findViewById(R.id.activity_rant_iv_avatar);
         mNameTextView = (TextView)findViewById(R.id.activity_rant_tv_name);
@@ -71,7 +76,7 @@ public class RantActivity extends AppCompatActivity {
         mCommentsRecyclerView.addItemDecoration(new SpaceItemDecoration(1));
         mCommentsRecyclerView.setAdapter(new CommentAdapter(new ArrayList<CommentItem>()));//空列表
         mProgressBar = (ProgressBar)findViewById(R.id.activity_rant_progress_bar);
-
+        mEmptyView = (LinearLayout)findViewById(R.id.activity_rant_empty_view);
 
         mHandler = new Handler(){
             @Override
@@ -93,6 +98,7 @@ public class RantActivity extends AppCompatActivity {
     private void getData(){
         mClient = new OkHttpClient();
         Request request = new Request.Builder()
+//                .url("http://120.24.92.198:8080/rant/api/rant.action?rantId="+rantId)
                 .url("http://10.0.2.2:8080/api/rant.action?rantId="+rantId)
                 .build();
         Call call = mClient.newCall(request);
@@ -114,6 +120,15 @@ public class RantActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case android.R.id.home:
+                onBackPressed();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
     private void convertJson2UI(){
         Gson gson = new Gson();
@@ -131,7 +146,13 @@ public class RantActivity extends AppCompatActivity {
         mDateTextView.setText(sdf.format(detailItem.getRantDate()));
         mContentTextView.setText(detailItem.getRantContent());
 
-        mCommentsRecyclerView.setAdapter(new CommentAdapter(detailItem.getCommentList()));
+        List<CommentItem> commentItems = detailItem.getCommentList();
+        if(commentItems==null||commentItems.size()==0){
+            mEmptyView.setVisibility(View.VISIBLE);
+        }
+        else{
+            mCommentsRecyclerView.setAdapter(new CommentAdapter(commentItems));
+        }
 
         mProgressBar.setVisibility(View.INVISIBLE);
     }

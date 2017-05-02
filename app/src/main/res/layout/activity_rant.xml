@@ -19,11 +19,11 @@
             app:layout_scrollFlags="scroll|enterAlways|snap">
 
             <TextView
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:text="Rant"
                 android:textColor="@color/white"
-                android:gravity="center"
+                android:layout_gravity="center"
                 android:textSize="25sp"/>
 
         </android.support.v7.widget.Toolbar>
@@ -40,22 +40,7 @@
     <!--content container-->
 
 
-    <!--button bar-->
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:layout_gravity="bottom">
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="这是Button Bar"
-            android:textColor="@color/black"
-            android:textSize="30sp"
-            android:gravity="center"/>
-
-    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -75,7 +60,6 @@
                 android:id="@+id/activity_rant_iv_avatar"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                tools:background="#aaa"
                 />
             <TextView
                 android:id="@+id/activity_rant_tv_name"
@@ -180,9 +164,32 @@
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="4dp"
-            android:background="@color/colorPrimaryLight">
+            android:background="@color/gray">
 
         </FrameLayout>
+
+        <!--占位试图-->
+        <LinearLayout
+            android:id="@+id/activity_rant_empty_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:orientation="vertical"
+            android:visibility="gone">
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:src="@drawable/sofaless"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="暂无评论"
+                android:textColor="@color/colorPrimaryLight"
+                android:alpha="0.54"
+                android:textSize="30sp"
+                android:gravity="center"/>
+        </LinearLayout>
+
 
         <!--Comments-->
         <android.support.v7.widget.RecyclerView
@@ -191,6 +198,74 @@
             android:layout_height="wrap_content">
 
         </android.support.v7.widget.RecyclerView>
+
+
+    </LinearLayout>
+
+
+    <!--button bar-->
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_gravity="bottom">
+
+        <!--<TextView-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:text="这是Button Bar"-->
+            <!--android:textColor="@color/black"-->
+            <!--android:textSize="30sp"-->
+            <!--android:gravity="center"/>-->
+
+        <ImageView
+            android:clickable="true"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="50dp"
+            android:layout_marginStart="16dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:src="@drawable/wechat"
+            android:background="@drawable/wechat_rectangle"/>
+
+        <ImageView
+            android:clickable="true"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="50dp"
+            android:layout_marginStart="8dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:src="@drawable/quan"
+            android:background="@drawable/quan_rectangle"/>
+
+        <ImageView
+            android:clickable="true"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="50dp"
+            android:layout_marginStart="8dp"
+            android:src="@drawable/ic_action_share"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:background="@drawable/primary_rectangle"/>
+
+        <Button
+            android:clickable="true"
+            android:layout_width="0dp"
+            android:layout_weight="3"
+            android:layout_height="50dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="16dp"
+            android:text="发表评论"
+            android:textStyle="bold"
+            android:textSize="25sp"
+            android:textColor="@color/white"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:background="@drawable/accent_rectangle"/>
+
 
     </LinearLayout>
 

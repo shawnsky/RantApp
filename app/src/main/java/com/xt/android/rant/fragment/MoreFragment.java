@@ -85,6 +85,7 @@ public class MoreFragment extends Fragment {
                     .add("token",token)
                     .build();
             Request request = new Request.Builder()
+//                    .url("http://120.24.92.198:8080/rant/api/logout.action")
                     .url("http://10.0.2.2:8080/api/logout.action")
                     .post(formBody)
                     .build();

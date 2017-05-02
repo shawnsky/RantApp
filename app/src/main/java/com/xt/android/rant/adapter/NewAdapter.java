@@ -69,7 +69,8 @@ public class NewAdapter extends RecyclerView.Adapter<NewAdapter.ViewHolder> {
             this.rantItem = rantItem;
             valueTextView.setText(String.valueOf(rantItem.getRantValue()));
             contentTextView.setText(rantItem.getRantContent());
-            nameTextView.setText(rantItem.getUserName());
+            if(rantItem.getRantHidden()==1) nameTextView.setText("神秘人");
+            else nameTextView.setText(rantItem.getUserName());
             commentNumTextView.setText(String.valueOf(rantItem.getCommentsNum()));
             dateTextView.setText(RelativeDateFormat.format(rantItem.getRantDate()));
         }

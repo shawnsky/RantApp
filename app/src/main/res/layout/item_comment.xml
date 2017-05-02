@@ -16,7 +16,6 @@
             android:id="@+id/item_comment_iv_avatar"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            tools:background="#aaa"
             />
         <TextView
             android:id="@+id/item_comment_tv_name"
@@ -66,12 +65,28 @@
         android:id="@+id/item_comment_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="60dp"
+        android:layout_marginStart="55dp"
         android:layout_marginEnd="32dp"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
         android:textColor="@color/black"
         android:alpha="0.87"
         tools:text="说得好，我很同意。"/>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/gray">
+
+    </FrameLayout>
+
+    <!--占位用，避免fab遮盖住最后一项-->
+    <FrameLayout
+        android:id="@+id/item_comment_bottom_space"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:visibility="gone">
+
+    </FrameLayout>
 
 </LinearLayout>

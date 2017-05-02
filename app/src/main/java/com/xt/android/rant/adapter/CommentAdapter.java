@@ -1,9 +1,11 @@
 package com.xt.android.rant.adapter;
 
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -21,6 +23,7 @@ import java.util.List;
 
 public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHolder>{
 
+    private static final String TAG = "CommentAdapter";
     private List<CommentItem> mCommentItemList;
 
     public CommentAdapter(List<CommentItem> mList){
@@ -36,6 +39,14 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
     public void onBindViewHolder(ViewHolder holder, int position) {
         CommentItem commentItem = mCommentItemList.get(position);
         holder.bindComment(commentItem);
+        holder.floorTextView.setText(String.valueOf(position+1)+"F");
+        if (position==mCommentItemList.size()-1){//最后一项
+            holder.frameLayout.setVisibility(View.VISIBLE);
+            Log.i(TAG, "onBindViewHolder: LAST ONE");
+        }
+        else{
+            holder.frameLayout.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -49,12 +60,16 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
         TextView contentTextView;
         TextView dateTextView;
         TextView nameTextView;
+        TextView floorTextView;
+        FrameLayout frameLayout;
         public ViewHolder(View itemView) {
             super(itemView);
             avatarImageView = (ImageView)itemView.findViewById(R.id.item_comment_iv_avatar);
             contentTextView = (TextView)itemView.findViewById(R.id.item_comment_content);
-//            dateTextView = (TextView)itemView.findViewById(R.id.item_comment_tv_date);
+            dateTextView = (TextView)itemView.findViewById(R.id.item_comment_tv_date);
             nameTextView = (TextView)itemView.findViewById(R.id.item_comment_tv_name);
+            floorTextView = (TextView)itemView.findViewById(R.id.item_comment_tv_floor);
+            frameLayout = (FrameLayout) itemView.findViewById(R.id.item_comment_bottom_space);
         }
         public void bindComment(CommentItem commentItem){
             mCommentItem = commentItem;
@@ -62,7 +77,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
 
             contentTextView.setText(commentItem.getCommentContent());
             SimpleDateFormat sdf = new SimpleDateFormat("yy/MM/dd hh:mm");
-//            dateTextView.setText(sdf.format(commentItem.getCommentDate()));
+            dateTextView.setText(sdf.format(commentItem.getCommentDate()));
             nameTextView.setText(commentItem.getUserName());
         }
     }

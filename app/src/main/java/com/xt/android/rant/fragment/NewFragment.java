@@ -1,9 +1,11 @@
 package com.xt.android.rant.fragment;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -17,6 +19,7 @@ import android.widget.ProgressBar;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.xt.android.rant.PostActivity;
 import com.xt.android.rant.R;
 import com.xt.android.rant.adapter.NewAdapter;
 import com.xt.android.rant.utils.SpaceItemDecoration;
@@ -42,6 +45,7 @@ public class NewFragment extends Fragment {
     private Toolbar mToolbar;
     private RecyclerView mRecyclerView;
     private ProgressBar mProgressBar;
+    private FloatingActionButton mFAB;
 
     private String mJson;
     private OkHttpClient mClient;
@@ -75,6 +79,7 @@ public class NewFragment extends Fragment {
 
         mProgressBar = (ProgressBar)view.findViewById(R.id.fragment_new_progress_bar);
         mRecyclerView = (RecyclerView)view.findViewById(R.id.fragment_new_recycler_view);
+        mFAB = (FloatingActionButton) view.findViewById(R.id.fragment_new_fab);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.addItemDecoration(new SpaceItemDecoration(1));
@@ -95,6 +100,15 @@ public class NewFragment extends Fragment {
         };
 
 
+        mFAB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), PostActivity.class);
+                startActivity(intent);
+            }
+        });
+
+
 
 
 
@@ -105,7 +119,7 @@ public class NewFragment extends Fragment {
     private void getData(){
         mClient = new OkHttpClient();
         Request request = new Request.Builder()
-//                .url("http://120.24.92.198:8080/rant/api/allRants.action")
+           //    .url("http://120.24.92.198:8080/rant/api/allRants.action")
                 .url("http://10.0.2.2:8080/api/allRants.action")
                 .build();
         Call call = mClient.newCall(request);

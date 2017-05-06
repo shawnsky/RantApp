@@ -98,7 +98,7 @@ public class RantActivity extends AppCompatActivity {
     private void getData(){
         mClient = new OkHttpClient();
         Request request = new Request.Builder()
-//                .url("http://120.24.92.198:8080/rant/api/rant.action?rantId="+rantId)
+            //    .url("http://120.24.92.198:8080/rant/api/rant.action?rantId="+rantId)
                 .url("http://10.0.2.2:8080/api/rant.action?rantId="+rantId)
                 .build();
         Call call = mClient.newCall(request);

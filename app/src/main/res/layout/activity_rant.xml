@@ -173,20 +173,20 @@
             android:id="@+id/activity_rant_empty_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="50dp"
             android:orientation="vertical"
             android:visibility="gone">
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:src="@drawable/sofaless"/>
+            <!--<ImageView-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:src="@drawable/sofaless"/>-->
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="暂无评论"
-                android:textColor="@color/colorPrimaryLight"
-                android:alpha="0.54"
-                android:textSize="30sp"
+                android:textColor="@color/colorPrimary"
+                android:alpha="0.27"
+                android:textSize="40sp"
                 android:gravity="center"/>
         </LinearLayout>
 
@@ -224,8 +224,8 @@
             android:layout_weight="1"
             android:layout_height="50dp"
             android:layout_marginStart="16dp"
-            android:paddingTop="8dp"
-            android:paddingBottom="8dp"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp"
             android:src="@drawable/wechat"
             android:background="@drawable/wechat_rectangle"/>
 
@@ -235,8 +235,8 @@
             android:layout_weight="1"
             android:layout_height="50dp"
             android:layout_marginStart="8dp"
-            android:paddingTop="8dp"
-            android:paddingBottom="8dp"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp"
             android:src="@drawable/quan"
             android:background="@drawable/quan_rectangle"/>
 
@@ -247,8 +247,8 @@
             android:layout_height="50dp"
             android:layout_marginStart="8dp"
             android:src="@drawable/ic_action_share"
-            android:paddingTop="8dp"
-            android:paddingBottom="8dp"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp"
             android:background="@drawable/primary_rectangle"/>
 
         <Button

@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/activity_post"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/colorPrimary"
+    tools:context="com.xt.android.rant.PostActivity">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/activity_post_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        app:contentInsetStart="0dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="发布新的Rant"
+            android:textColor="@color/white"
+            android:layout_gravity="center"
+            android:textSize="25sp"/>
+
+
+
+    </android.support.v7.widget.Toolbar>
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/activity_post_cardview"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginTop="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:elevation="0dp"
+        app:cardCornerRadius="8dp">
+        <EditText
+            android:id="@+id/activity_post_et_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:hint="这里输入Rant内容。"
+            android:background="@null"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="bottom"
+            android:background="@color/colorPrimaryLight">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                android:text="150字"/>
+
+            <Switch
+                android:id="@+id/activity_post_switch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                android:layout_alignParentEnd="true"
+                android:paddingEnd="35dp"
+                />
+            <TextView
+                android:id="@+id/activity_post_tv_is_hidden"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                tools:text="公开"
+                android:layout_alignParentEnd="true"/>
+
+        </RelativeLayout>
+
+
+    </android.support.v7.widget.CardView>
+
+
+    <!--提交按钮-->
+    <android.support.v7.widget.CardView
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        app:cardCornerRadius="8dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginBottom="16dp">
+
+        <Button
+            android:id="@+id/activity_post_btn_submit"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="发布"
+            android:textStyle="bold"
+            android:textSize="20sp"
+            android:textColor="@color/white"
+            android:background="@color/colorAccent"/>
+    </android.support.v7.widget.CardView>
+
+    <TextView
+        android:id="@+id/activity_post_tv_hidden_info"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp"
+        android:visibility="invisible"
+        android:text="你正要发布一条匿名的Rant内容，别人无法查看你的个人信息，但你可以在个人中心管理这条内容，也可以收到关于这条内容的动态。"
+        android:textStyle="normal"
+        android:textColor="@color/colorPrimaryLight"/>
+
+
+
+</LinearLayout>

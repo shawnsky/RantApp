@@ -1,7 +1,9 @@
 package com.xt.android.rant.fragment;
 
 
+import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -11,7 +13,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +24,7 @@ import com.xt.android.rant.PostActivity;
 import com.xt.android.rant.R;
 import com.xt.android.rant.adapter.NewAdapter;
 import com.xt.android.rant.utils.SpaceItemDecoration;
+import com.xt.android.rant.utils.TokenUtil;
 import com.xt.android.rant.wrapper.RantItem;
 
 import java.io.IOException;
@@ -117,10 +119,10 @@ public class NewFragment extends Fragment {
 
 
     private void getData(){
+        String ip = getActivity().getResources().getString(R.string.ip_server);
         mClient = new OkHttpClient();
         Request request = new Request.Builder()
-           //    .url("http://120.24.92.198:8080/rant/api/allRants.action")
-                .url("http://10.0.2.2:8080/api/allRants.action")
+                .url(ip+"api/allRants.action?token="+ TokenUtil.getToken(getActivity()))
                 .build();
         Call call = mClient.newCall(request);
         call.enqueue(new Callback() {
@@ -146,6 +148,8 @@ public class NewFragment extends Fragment {
         NewAdapter adapter = new NewAdapter(rantItemList);
         mRecyclerView.setAdapter(adapter);
     }
+
+
 
 
 

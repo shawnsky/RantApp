@@ -20,7 +20,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:text="发布新的Rant"
+            android:text="@string/post_title"
             android:textColor="@color/white"
             android:layout_gravity="center"
             android:textSize="25sp"/>
@@ -43,7 +43,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
-            android:hint="这里输入Rant内容。"
+            android:hint="@string/post_content_hint"
             android:background="@null"/>
 
         <RelativeLayout
@@ -59,7 +59,7 @@
                 android:layout_margin="8dp"
                 android:textColor="@color/white"
                 android:textStyle="bold"
-                android:text="150字"/>
+                android:text="@string/post_text_limit"/>
 
             <Switch
                 android:id="@+id/activity_post_switch"
@@ -100,7 +100,7 @@
             android:id="@+id/activity_post_btn_submit"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="发布"
+            android:text="@string/post_button"
             android:textStyle="bold"
             android:textSize="20sp"
             android:textColor="@color/white"
@@ -114,7 +114,7 @@
         android:layout_marginStart="32dp"
         android:layout_marginEnd="32dp"
         android:visibility="invisible"
-        android:text="你正要发布一条匿名的Rant内容，别人无法查看你的个人信息，但你可以在个人中心管理这条内容，也可以收到关于这条内容的动态。"
+        android:text="@string/post_hidden_info"
         android:textStyle="normal"
         android:textColor="@color/colorPrimaryLight"/>
 

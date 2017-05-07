@@ -21,6 +21,8 @@ import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import com.xt.android.rant.utils.TokenUtil;
+
 import java.io.IOException;
 
 import okhttp3.Call;
@@ -79,7 +81,7 @@ public class PostActivity extends AppCompatActivity {
                         break;
                     case MSG_FAILED:
                         mProgressDialog.dismiss();
-                        Snackbar.make(mButton, "发送失败", Snackbar.LENGTH_SHORT).show();
+                        Snackbar.make(mButton, R.string.post_error_post_failed, Snackbar.LENGTH_SHORT).show();
                         break;
                 }
             }
@@ -99,12 +101,12 @@ public class PostActivity extends AppCompatActivity {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 if(b){
-                    mIsHidden.setText("匿名");
+                    mIsHidden.setText(R.string.post_status_hidden);
                     mHiddenInfo.setVisibility(View.VISIBLE);
                     isHidden = 1;
                 }
                 else{
-                    mIsHidden.setText("公开");
+                    mIsHidden.setText(R.string.post_status_public);
                     mHiddenInfo.setVisibility(View.INVISIBLE);
                     isHidden = 0;
                 }
@@ -117,14 +119,14 @@ public class PostActivity extends AppCompatActivity {
 
     private void post(){
         mClient = new OkHttpClient();
+        String ip = getResources().getString(R.string.ip_server);
         RequestBody formBody = new FormBody.Builder()
-                .add("token",getToken())
+                .add("token", TokenUtil.getToken(this))
                 .add("content",mEditText.getText().toString())
                 .add("isHidden",String.valueOf(isHidden))
                 .build();
         Request request = new Request.Builder()
-//                .url("http://120.24.92.198:8080/rant/api/postrant.action")
-                .url("http://10.0.2.2:8080/api/postrant.action")
+                .url(ip+"api/postrant.action")
                 .post(formBody)
                 .build();
         Call call = mClient.newCall(request);
@@ -147,14 +149,10 @@ public class PostActivity extends AppCompatActivity {
 
     private void init(){
         isHidden = 0;
-        mIsHidden.setText("公开");
+        mIsHidden.setText(R.string.post_status_public);
         mHiddenInfo.setVisibility(View.INVISIBLE);
     }
 
-    private String getToken(){
-        SharedPreferences sharedPreferences = getSharedPreferences("token", Activity.MODE_PRIVATE);
-        return sharedPreferences.getString("token","");
-    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

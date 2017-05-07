@@ -10,6 +10,8 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
     <!--通用-->
+    <string name="ip_server">http://120.24.92.198:8080/rant/</string>
+    <string name="localhost">http://10.0.2.2:8080/</string>
     <string name="network_error">网络请求失败</string>
     <string name="http_error">服务器开个小差😅</string>
     <string name="wait_title">稍等</string>
@@ -40,4 +42,39 @@
     <string name="login_submit">登录</string>
     <string name="login_password_wrong">用户名不存在或密码错误</string>
     <string name="login_null">请输入用户名和密码。</string>
+
+
+    <!--最新界面-->
+    <string name="new_title">最新</string>
+
+
+    <!--最热界面-->
+    <string name="hot_title">最热</string>
+
+
+    <!--通知界面-->
+    <string name="notify_title">通知</string>
+
+
+    <!--更多界面-->
+    <string name="more_title">更多</string>
+
+
+
+    <!--RantDetail界面-->
+    <string name="rant_title">Rant</string>
+    <string name="rant_hidden_user_name">神秘人</string>
+    <string name="rant_no_comment">暂无评论</string>
+    <string name="rant_post_comment">发表评论</string>
+
+
+    <!--发布Rant界面-->
+    <string name="post_title">发布新的Rant</string>
+    <string name="post_content_hint">这里输入Rant内容</string>
+    <string name="post_text_limit">150字</string>
+    <string name="post_button">发布</string>
+    <string name="post_hidden_info">你正要发布一条匿名的Rant内容，别人无法查看你的个人信息，但你可以在个人中心管理这条内容，也可以收到关于这条内容的动态。</string>
+    <string name="post_error_post_failed">发送失败</string>
+    <string name="post_status_hidden">匿名</string>
+    <string name="post_status_public">公开</string>
 </resources>

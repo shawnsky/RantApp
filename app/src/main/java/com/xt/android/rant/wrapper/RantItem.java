@@ -25,6 +25,16 @@ public class RantItem {
 
     private Integer commentsNum;
 
+    private Integer thumbFlag;
+
+    public Integer getThumbFlag() {
+        return thumbFlag;
+    }
+
+    public void setThumbFlag(Integer thumbFlag) {
+        this.thumbFlag = thumbFlag;
+    }
+
     public Integer getRantId() {
         return rantId;
     }

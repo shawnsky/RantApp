@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.Settings;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -78,15 +79,18 @@ public class LoginFragment extends Fragment {
                 switch (msg.what){
                     case MSG_ERROR_WRONG:
                         mProgressDialog.dismiss();
-                        Toast.makeText(getActivity(),R.string.login_password_wrong,Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(getActivity(),R.string.login_password_wrong,Toast.LENGTH_SHORT).show();
+                        Snackbar.make(mUserNameEditText, R.string.login_password_wrong, Snackbar.LENGTH_SHORT).show();
                         break;
                     case MSG_ERROR_HTTP:
                         mProgressDialog.dismiss();
-                        Toast.makeText(getActivity(),R.string.http_error,Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(getActivity(),R.string.http_error,Toast.LENGTH_SHORT).show();
+                        Snackbar.make(mUserNameEditText, R.string.http_error, Snackbar.LENGTH_SHORT).show();
                         break;
                     case MSG_ERROR_NETWORK:
                         mProgressDialog.dismiss();
-                        Toast.makeText(getActivity(),R.string.network_error,Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(getActivity(),R.string.network_error,Toast.LENGTH_SHORT).show();
+                        Snackbar.make(mUserNameEditText, R.string.network_error, Snackbar.LENGTH_SHORT).show();
                         break;
 
                 }
@@ -118,7 +122,7 @@ public class LoginFragment extends Fragment {
     private void login(String username, String password){
         String android_id = Settings.Secure.getString(getActivity().getContentResolver(), Settings.Secure.ANDROID_ID);
         String deviceMd5 = HashUtil.md5(android_id);
-
+        String ip = getActivity().getResources().getString(R.string.ip_server);
         mClient = new OkHttpClient();
         RequestBody formBody = new FormBody.Builder()
                 .add("username",username)
@@ -126,10 +130,10 @@ public class LoginFragment extends Fragment {
                 .add("device",deviceMd5)
                 .build();
         Request request = new Request.Builder()
-//                .url("http://120.24.92.198:8080/rant/api/login.action")
-                .url("http://10.0.2.2:8080/api/login.action")
+                .url(ip+"api/login.action")
                 .post(formBody)
                 .build();
+
         Call call = mClient.newCall(request);
         call.enqueue(new Callback() {
             @Override

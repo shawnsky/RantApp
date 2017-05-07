@@ -21,5 +21,14 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="CustomCheckboxUp" parent="@android:style/Widget.CompoundButton.CheckBox">
+        <item name="android:button">@drawable/custom_checkbox_up</item>
+    </style>
+
+    <style name="CustomCheckboxDown" parent="@android:style/Widget.CompoundButton.CheckBox">
+        <item name="android:button">@drawable/custom_checkbox_down</item>
+    </style>
+
+
 
 </resources>

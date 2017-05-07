@@ -26,8 +26,7 @@
         </activity>
         <activity
             android:name=".AuthActivity"
-            android:label="注册"
-            android:theme="@android:style/Theme.Material.Light.NoActionBar">
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         </activity>
         <activity
             android:name=".RantActivity"

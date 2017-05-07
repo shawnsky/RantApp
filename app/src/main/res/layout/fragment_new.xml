@@ -21,7 +21,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:text="最新"
+                android:text="@string/new_title"
                 android:textColor="@color/white"
                 android:gravity="center"
                 android:textSize="25sp"/>

@@ -14,18 +14,17 @@
         android:orientation="vertical"
         >
 
-        <ImageView
-            android:id="@+id/item_rant_item_btn_up"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+        <CheckBox
+            android:id="@+id/item_rant_item_checkbox_up"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:background="@drawable/custom_circle"
-            android:tint="@color/white"
-            android:src="@drawable/ic_rant_up"/>
+            style="@style/CustomCheckboxUp"/>
+
         <TextView
             android:id="@+id/item_rant_item_tv_value"
-            android:layout_width="30dp"
+            android:layout_width="32dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:textColor="@color/colorPrimaryLight"
@@ -33,21 +32,21 @@
             android:textStyle="bold"
             tools:text="11"
             android:textAlignment="center"/>
-        <ImageView
-            android:id="@+id/item_rant_item_btn_down"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+
+        <CheckBox
+            android:id="@+id/item_rant_item_checkbox_down"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
             android:layout_marginStart="8dp"
             android:layout_marginBottom="8dp"
-            android:background="@drawable/custom_circle"
-            android:tint="@color/white"
-            android:src="@drawable/ic_rant_down"/>
+            style="@style/CustomCheckboxDown"/>
 
 
     </LinearLayout>
 
     <!--Right-->
     <LinearLayout
+        android:id="@+id/item_rant_item_ll_clickable"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:orientation="vertical"

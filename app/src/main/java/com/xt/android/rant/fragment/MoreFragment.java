@@ -80,13 +80,13 @@ public class MoreFragment extends Fragment {
             toLogin();
         }
         else{
+            String ip = getActivity().getResources().getString(R.string.ip_server);
             mClient = new OkHttpClient();
             RequestBody formBody = new FormBody.Builder()
                     .add("token",token)
                     .build();
             Request request = new Request.Builder()
-//                    .url("http://120.24.92.198:8080/rant/api/logout.action")
-                    .url("http://10.0.2.2:8080/api/logout.action")
+                    .url(ip+"api/logout.action")
                     .post(formBody)
                     .build();
             Call call = mClient.newCall(request);
@@ -110,6 +110,7 @@ public class MoreFragment extends Fragment {
 
         }
     }
+
 
     private void toLogin(){
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("token", Activity.MODE_PRIVATE);

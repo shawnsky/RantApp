@@ -1,5 +1,8 @@
 package com.xt.android.rant;
 
+import android.content.Context;
+import android.content.Intent;
+import android.media.Image;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
@@ -7,17 +10,23 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 import com.xt.android.rant.adapter.CommentAdapter;
 import com.xt.android.rant.utils.SpaceItemDecoration;
+import com.xt.android.rant.utils.TokenUtil;
 import com.xt.android.rant.wrapper.CommentItem;
 import com.xt.android.rant.wrapper.DetailItem;
 
@@ -28,19 +37,22 @@ import java.util.List;
 
 import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 import okhttp3.Response;
 
-public class RantActivity extends AppCompatActivity {
-    private static final String EXTRA_RANT_ID = "extra_rant_id";
+public class RantActivity extends AppCompatActivity implements View.OnClickListener,CompoundButton.OnCheckedChangeListener{
+    private static final String BUNDLE_RANT_ID = "bundle_rant_id";
 
     private static final int MSG_SUCCESS = 1;
+    private static final String TAG = "RantActivity";
 
     private ImageView mAvatarImageView;
     private TextView mNameTextView;
-    private ImageView mUpButton;
-    private ImageView mDownButton;
+    private CheckBox mUpCheckbox;
+    private CheckBox mDownCheckbox;
     private TextView mValueTextView;
     private TextView mDateTextView;
     private TextView mContentTextView;
@@ -48,11 +60,25 @@ public class RantActivity extends AppCompatActivity {
     private Toolbar mToolbar;
     private ProgressBar mProgressBar;
     private LinearLayout mEmptyView;
+    private RelativeLayout mUserInfoLayout;
+    private ImageView mWeChatShareButton;
+    private ImageView mQuanShareButton;
+    private ImageView mShareButton;
+    private Button mPostButton;
 
     private int rantId;
     private OkHttpClient mClient;
     private Handler mHandler;
     private String mJson;
+    private DetailItem mDetailItem = new DetailItem();
+
+    public static Intent newIntent(Context context, int rantId){
+        Intent intent = new Intent(context, RantActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putInt(BUNDLE_RANT_ID, rantId);
+        intent.putExtras(bundle);
+        return intent;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,8 +92,8 @@ public class RantActivity extends AppCompatActivity {
 
         mAvatarImageView = (ImageView)findViewById(R.id.activity_rant_iv_avatar);
         mNameTextView = (TextView)findViewById(R.id.activity_rant_tv_name);
-        mUpButton = (ImageView)findViewById(R.id.activity_rant_btn_up);
-        mDownButton = (ImageView)findViewById(R.id.activity_rant_btn_down);
+        mUpCheckbox = (CheckBox) findViewById(R.id.activity_rant_checkbox_up);
+        mDownCheckbox = (CheckBox)findViewById(R.id.activity_rant_checkbox_down);
         mValueTextView = (TextView)findViewById(R.id.activity_rant_tv_value);
         mDateTextView = (TextView)findViewById(R.id.activity_rant_tv_date);
         mContentTextView = (TextView)findViewById(R.id.activity_rant_tv_content);
@@ -77,6 +103,20 @@ public class RantActivity extends AppCompatActivity {
         mCommentsRecyclerView.setAdapter(new CommentAdapter(new ArrayList<CommentItem>()));//空列表
         mProgressBar = (ProgressBar)findViewById(R.id.activity_rant_progress_bar);
         mEmptyView = (LinearLayout)findViewById(R.id.activity_rant_empty_view);
+        mUserInfoLayout = (RelativeLayout) findViewById(R.id.activity_rant_user_into_rl_clickable);
+        mWeChatShareButton = (ImageView) findViewById(R.id.activity_rant_share_wechat);
+        mQuanShareButton = (ImageView) findViewById(R.id.activity_rant_share_quan);
+        mShareButton = (ImageView) findViewById(R.id.activity_rant_share);
+        mPostButton = (Button) findViewById(R.id.activity_rant_btn_submit);
+
+        mUpCheckbox.setOnCheckedChangeListener(this);
+        mDownCheckbox.setOnCheckedChangeListener(this);
+        mUserInfoLayout.setOnClickListener(this);
+        mWeChatShareButton.setOnClickListener(this);
+        mQuanShareButton.setOnClickListener(this);
+        mShareButton.setOnClickListener(this);
+        mPostButton.setOnClickListener(this);
+
 
         mHandler = new Handler(){
             @Override
@@ -90,16 +130,16 @@ public class RantActivity extends AppCompatActivity {
             }
         };
 
-        rantId = getIntent().getIntExtra(EXTRA_RANT_ID,0);
+        rantId = getIntent().getExtras().getInt(BUNDLE_RANT_ID, 0);
         getData();
 
     }
 
     private void getData(){
         mClient = new OkHttpClient();
+        String ip = getResources().getString(R.string.ip_server);
         Request request = new Request.Builder()
-            //    .url("http://120.24.92.198:8080/rant/api/rant.action?rantId="+rantId)
-                .url("http://10.0.2.2:8080/api/rant.action?rantId="+rantId)
+                .url(ip+"api/rant.action?rantId="+rantId+"&token="+ TokenUtil.getToken(this))
                 .build();
         Call call = mClient.newCall(request);
         call.enqueue(new Callback() {
@@ -131,22 +171,37 @@ public class RantActivity extends AppCompatActivity {
     }
 
     private void convertJson2UI(){
+        Log.i(TAG, "convertJson2UI: "+mJson);
         Gson gson = new Gson();
-        DetailItem detailItem = gson.fromJson(mJson, DetailItem.class);
+        mDetailItem = gson.fromJson(mJson, DetailItem.class);
 
-        Picasso.with(this).load(detailItem.getRantAvatar()).into(mAvatarImageView);
-        if(detailItem.getRantHidden()==1){//匿名
-            mNameTextView.setText("神秘人");
+        Picasso.with(this).load(mDetailItem.getRantAvatar()).into(mAvatarImageView);
+        if(mDetailItem.getRantHidden()==1){//匿名
+            mNameTextView.setText(R.string.rant_hidden_user_name);
         }
-        else mNameTextView.setText(detailItem.getUserName());
+        else mNameTextView.setText(mDetailItem.getUserName());
         // TODO: 2017/5/2  mUpButton
         // TODO: 2017/5/2  mDownButton
-        mValueTextView.setText(String.valueOf(detailItem.getRantValue()));
+        mValueTextView.setText(String.valueOf(mDetailItem.getRantValue()));
         SimpleDateFormat sdf = new SimpleDateFormat("yy/MM/dd hh:mm");
-        mDateTextView.setText(sdf.format(detailItem.getRantDate()));
-        mContentTextView.setText(detailItem.getRantContent());
+        mDateTextView.setText(sdf.format(mDetailItem.getRantDate()));
+        mContentTextView.setText(mDetailItem.getRantContent());
 
-        List<CommentItem> commentItems = detailItem.getCommentList();
+        if(mDetailItem.getThumbValue()==1){
+            mUpCheckbox.setChecked(true);
+            mDownCheckbox.setChecked(false);
+        }
+        else if(mDetailItem.getThumbValue()==-1){
+            mUpCheckbox.setChecked(false);
+            mDownCheckbox.setChecked(true);
+        }
+        else{
+            mUpCheckbox.setChecked(false);
+            mDownCheckbox.setChecked(false);
+        }
+
+
+        List<CommentItem> commentItems = mDetailItem.getCommentList();
         if(commentItems==null||commentItems.size()==0){
             mEmptyView.setVisibility(View.VISIBLE);
         }
@@ -155,5 +210,73 @@ public class RantActivity extends AppCompatActivity {
         }
 
         mProgressBar.setVisibility(View.INVISIBLE);
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch(view.getId()){
+            case R.id.activity_rant_user_into_rl_clickable:
+                break;
+            case R.id.activity_rant_btn_submit:
+                break;
+            case R.id.activity_rant_share_wechat:
+                break;
+            case R.id.activity_rant_share_quan:
+                break;
+            case R.id.activity_rant_share:
+                break;
+
+        }
+    }
+
+    private void postThumb(int flag, int rantId){
+        OkHttpClient client = new OkHttpClient();
+        String ip = getResources().getString(R.string.ip_server);
+        RequestBody formBody = new FormBody.Builder()
+                .add("token", TokenUtil.getToken(this))
+                .add("rantId",String.valueOf(rantId))
+                .build();
+        Request request;
+        if(flag==1) {
+            request = new Request.Builder()
+                    .url(ip + "api/thumbsUp.action")
+                    .post(formBody)
+                    .build();
+        }
+        else{
+            request = new Request.Builder()
+                    .url(ip + "api/thumbsDown.action")
+                    .post(formBody)
+                    .build();
+        }
+        Call call = client.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+
+            }
+        });
+    }
+
+    @Override
+    public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+        switch(compoundButton.getId()){
+            case R.id.activity_rant_checkbox_up:
+                mDownCheckbox.setClickable(false);
+                mUpCheckbox.setClickable(true);
+                postThumb(1, mDetailItem.getRantId());
+                break;
+            case R.id.activity_rant_checkbox_down:
+                mDownCheckbox.setClickable(true);
+                mUpCheckbox.setClickable(false);
+                postThumb(-1, mDetailItem.getRantId());
+                break;
+        }
+
     }
 }

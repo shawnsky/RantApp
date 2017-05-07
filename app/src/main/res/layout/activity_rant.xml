@@ -21,7 +21,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:text="Rant"
+                android:text="@string/rant_title"
                 android:textColor="@color/white"
                 android:layout_gravity="center"
                 android:textSize="25sp"/>
@@ -50,6 +50,7 @@
 
         <!--user info-->
         <RelativeLayout
+            android:id="@+id/activity_rant_user_into_rl_clickable"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
             android:layout_width="match_parent"
@@ -103,15 +104,13 @@
                 android:orientation="vertical"
                 >
 
-                <ImageView
-                    android:id="@+id/activity_rant_btn_up"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
+                <CheckBox
+                    android:id="@+id/activity_rant_checkbox_up"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
-                    android:background="@drawable/custom_circle"
-                    android:tint="@color/white"
-                    android:src="@drawable/ic_rant_up"/>
+                    style="@style/CustomCheckboxUp"/>
                 <TextView
                     android:id="@+id/activity_rant_tv_value"
                     android:layout_width="30dp"
@@ -122,15 +121,13 @@
                     android:textStyle="bold"
                     tools:text="11"
                     android:textAlignment="center"/>
-                <ImageView
-                    android:id="@+id/activity_rant_btn_down"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
+                <CheckBox
+                    android:id="@+id/activity_rant_checkbox_down"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
                     android:layout_marginStart="8dp"
                     android:layout_marginBottom="8dp"
-                    android:background="@drawable/custom_circle"
-                    android:tint="@color/white"
-                    android:src="@drawable/ic_rant_down"/>
+                    style="@style/CustomCheckboxDown"/>
 
 
             </LinearLayout>
@@ -183,7 +180,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="暂无评论"
+                android:text="@string/rant_no_comment"
                 android:textColor="@color/colorPrimary"
                 android:alpha="0.27"
                 android:textSize="40sp"
@@ -219,6 +216,7 @@
             <!--android:gravity="center"/>-->
 
         <ImageView
+            android:id="@+id/activity_rant_share_wechat"
             android:clickable="true"
             android:layout_width="0dp"
             android:layout_weight="1"
@@ -230,6 +228,7 @@
             android:background="@drawable/wechat_rectangle"/>
 
         <ImageView
+            android:id="@+id/activity_rant_share_quan"
             android:clickable="true"
             android:layout_width="0dp"
             android:layout_weight="1"
@@ -241,6 +240,7 @@
             android:background="@drawable/quan_rectangle"/>
 
         <ImageView
+            android:id="@+id/activity_rant_share"
             android:clickable="true"
             android:layout_width="0dp"
             android:layout_weight="1"
@@ -252,13 +252,14 @@
             android:background="@drawable/primary_rectangle"/>
 
         <Button
+            android:id="@+id/activity_rant_btn_submit"
             android:clickable="true"
             android:layout_width="0dp"
             android:layout_weight="3"
             android:layout_height="50dp"
             android:layout_marginStart="8dp"
             android:layout_marginEnd="16dp"
-            android:text="发表评论"
+            android:text="@string/rant_post_comment"
             android:textStyle="bold"
             android:textSize="25sp"
             android:textColor="@color/white"

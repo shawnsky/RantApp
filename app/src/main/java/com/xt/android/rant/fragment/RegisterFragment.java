@@ -84,15 +84,18 @@ public class RegisterFragment extends Fragment {
                 switch (msg.what){
                     case MSG_ERROR_EXIST:
                         mProgressDialog.dismiss();
-                        Toast.makeText(getActivity(),R.string.register_username_exist,Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(getActivity(),R.string.register_username_exist,Toast.LENGTH_SHORT).show();
+                        Snackbar.make(mUsernameEditText, R.string.register_username_exist, Snackbar.LENGTH_SHORT).show();
                         break;
                     case MSG_ERROR_HTTP:
                         mProgressDialog.dismiss();
-                        Toast.makeText(getActivity(),R.string.http_error,Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(getActivity(),R.string.http_error,Toast.LENGTH_SHORT).show();
+                        Snackbar.make(mUsernameEditText, R.string.http_error, Snackbar.LENGTH_SHORT).show();
                         break;
                     case MSG_ERROR_NETWORK:
                         mProgressDialog.dismiss();
-                        Toast.makeText(getActivity(),R.string.network_error,Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(getActivity(),R.string.network_error,Toast.LENGTH_SHORT).show();
+                        Snackbar.make(mUsernameEditText, R.string.network_error, Snackbar.LENGTH_SHORT).show();
                         break;
 
                 }
@@ -129,6 +132,7 @@ public class RegisterFragment extends Fragment {
     private void register(String username, String password){
         String android_id = Settings.Secure.getString(getActivity().getContentResolver(), Settings.Secure.ANDROID_ID);
         String deviceMd5 = HashUtil.md5(android_id);
+        String ip = getActivity().getResources().getString(R.string.ip_server);
 
         mClient = new OkHttpClient();
         RequestBody formBody = new FormBody.Builder()
@@ -137,8 +141,7 @@ public class RegisterFragment extends Fragment {
                 .add("device",deviceMd5)
                 .build();
         Request request = new Request.Builder()
-//                .url("http://120.24.92.198:8080/rant/api/reg.action")
-                .url("http://10.0.2.2:8080/api/reg.action")
+                .url(ip+"api/reg.action")
                 .post(formBody)
                 .build();
         Call call = mClient.newCall(request);

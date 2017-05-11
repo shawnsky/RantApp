@@ -1,12 +1,14 @@
 package com.xt.android.rant.wrapper;
 
+import org.litepal.crud.DataSupport;
+
 import java.util.Date;
 
 /**
  * Created by admin on 2017/5/1.
  */
 
-public class RantItem {
+public class RantItem extends DataSupport{
     private Integer rantId;
 
     private Integer userId;

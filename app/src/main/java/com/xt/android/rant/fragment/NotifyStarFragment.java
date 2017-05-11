@@ -5,8 +5,10 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,12 +16,12 @@ import android.view.ViewGroup;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.xt.android.rant.R;
-import com.xt.android.rant.adapter.NotifyCmtAdapter;
 import com.xt.android.rant.adapter.NotifyStarAdapter;
 import com.xt.android.rant.utils.SpaceItemDecoration;
 import com.xt.android.rant.utils.TokenUtil;
-import com.xt.android.rant.wrapper.CmtNotifyItem;
 import com.xt.android.rant.wrapper.StarNotifyItem;
+
+import org.litepal.crud.DataSupport;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -34,11 +36,11 @@ import okhttp3.Response;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class NotifyStarFragment extends Fragment {
+public class NotifyStarFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
-
+    private static final String TAG = "NotifyStarFragment";
     private static final int MSG_GET_NOTIFY_LIST = 1;
-
+    private SwipeRefreshLayout mSwipeRefreshLayout;
     private RecyclerView mRecyclerView;
     private OkHttpClient mClient;
     private String mJson;
@@ -59,14 +61,34 @@ public class NotifyStarFragment extends Fragment {
         mRecyclerView.setAdapter(new NotifyStarAdapter(new ArrayList<StarNotifyItem>()));
         mRecyclerView.addItemDecoration(new SpaceItemDecoration(5));
 
-        getData();
+        mSwipeRefreshLayout = (SwipeRefreshLayout)view.findViewById(R.id.fragment_notify_star_swipe_refresh_layout);
+        mSwipeRefreshLayout.setOnRefreshListener(this);
+        mSwipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.colorPrimary));
+
+
+        List<StarNotifyItem> starNotifyItemsFromDatabase = DataSupport.findAll(StarNotifyItem.class);
+        if(starNotifyItemsFromDatabase==null){
+            Log.i(TAG, "onCreateView: starNotifyItemsFromDatabase==null");
+            getData();
+        }
+        else{
+            Log.i(TAG, "onCreateView: load star from database");
+            NotifyStarAdapter adapter = new NotifyStarAdapter(starNotifyItemsFromDatabase);
+            mRecyclerView.setAdapter(adapter);
+        }
 
         mHandler = new Handler(){
             @Override
             public void handleMessage(Message msg) {
                 switch (msg.what){
                     case MSG_GET_NOTIFY_LIST:
-                        convertJson2UI(mJson);
+                        Gson gson = new Gson();
+                        List<StarNotifyItem> starNotifyItems = gson.fromJson(mJson, new TypeToken<List<StarNotifyItem>>(){}.getType());
+                        NotifyStarAdapter adapter = new NotifyStarAdapter(starNotifyItems);
+                        DataSupport.deleteAll(StarNotifyItem.class);
+                        DataSupport.saveAll(starNotifyItems);
+                        mRecyclerView.setAdapter(adapter);
+                        mSwipeRefreshLayout.setRefreshing(false);
                         break;
                     default:
                         break;
@@ -92,8 +114,7 @@ public class NotifyStarFragment extends Fragment {
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-                String jsonBody = response.body().string();
-                mJson = jsonBody;
+                mJson = response.body().string();
                 mHandler.sendEmptyMessage(MSG_GET_NOTIFY_LIST);
 
             }
@@ -101,10 +122,9 @@ public class NotifyStarFragment extends Fragment {
 
     }
 
-    private void convertJson2UI(String body){
-        Gson gson = new Gson();
-        List<StarNotifyItem> starNotifyItems = gson.fromJson(body, new TypeToken<List<StarNotifyItem>>(){}.getType());
-        NotifyStarAdapter adapter = new NotifyStarAdapter(starNotifyItems);
-        mRecyclerView.setAdapter(adapter);
+
+    @Override
+    public void onRefresh() {
+        getData();
     }
 }

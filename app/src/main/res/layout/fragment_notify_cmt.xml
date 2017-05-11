@@ -5,11 +5,16 @@
              tools:context="com.xt.android.rant.fragment.NotifyCmtFragment"
              xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/fragment_notify_cmt_recycler_view"
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/fragment_notify_cmt_swipe_refresh_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-    </android.support.v7.widget.RecyclerView>
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/fragment_notify_cmt_recycler_view"
+           android:layout_width="match_parent"
+          android:layout_height="match_parent">
+        </android.support.v7.widget.RecyclerView>
+    </android.support.v4.widget.SwipeRefreshLayout>
 
 </FrameLayout>

@@ -5,8 +5,10 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +23,8 @@ import com.xt.android.rant.utils.TokenUtil;
 import com.xt.android.rant.wrapper.CmtNotifyItem;
 import com.xt.android.rant.wrapper.RantItem;
 
+import org.litepal.crud.DataSupport;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,11 +38,12 @@ import okhttp3.Response;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class NotifyCmtFragment extends Fragment {
-
+public class NotifyCmtFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
+    private static final String TAG = "NotifyCmtFragment";
     private static final int MSG_GET_NOTIFY_LIST = 1;
 
     private RecyclerView mRecyclerView;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
     private OkHttpClient mClient;
     private String mJson;
     private Handler mHandler;
@@ -57,15 +62,36 @@ public class NotifyCmtFragment extends Fragment {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRecyclerView.setAdapter(new NotifyCmtAdapter(new ArrayList<CmtNotifyItem>()));
         mRecyclerView.addItemDecoration(new SpaceItemDecoration(5));
+        mSwipeRefreshLayout = (SwipeRefreshLayout)view.findViewById(R.id.fragment_notify_cmt_swipe_refresh_layout);
+        mSwipeRefreshLayout.setOnRefreshListener(this);
+        mSwipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.colorPrimary));
 
-        getData();
+        List<CmtNotifyItem> cmtNotifyItemsFromDatabase = DataSupport.findAll(CmtNotifyItem.class);
+        if(cmtNotifyItemsFromDatabase==null){
+            Log.i(TAG, "onCreateView: cmtNotifyItemsFromDatabase==null");
+            getData();
+        }
+        else{
+            Log.i(TAG, "onCreateView: load cmt from database");
+            NotifyCmtAdapter adapter = new NotifyCmtAdapter(cmtNotifyItemsFromDatabase);
+            mRecyclerView.setAdapter(adapter);
+
+        }
+
+        
 
         mHandler = new Handler(){
             @Override
             public void handleMessage(Message msg) {
                 switch (msg.what){
                     case MSG_GET_NOTIFY_LIST:
-                        convertJson2UI(mJson);
+                        Gson gson = new Gson();
+                        List<CmtNotifyItem> cmtNotifyItems = gson.fromJson(mJson, new TypeToken<List<CmtNotifyItem>>(){}.getType());
+                        NotifyCmtAdapter adapter = new NotifyCmtAdapter(cmtNotifyItems);
+                        DataSupport.deleteAll(CmtNotifyItem.class);
+                        DataSupport.saveAll(cmtNotifyItems);
+                        mRecyclerView.setAdapter(adapter);
+                        mSwipeRefreshLayout.setRefreshing(false);
                         break;
                     default:
                         break;
@@ -91,20 +117,15 @@ public class NotifyCmtFragment extends Fragment {
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-                String jsonBody = response.body().string();
-                mJson = jsonBody;
+                mJson = response.body().string();
                 mHandler.sendEmptyMessage(MSG_GET_NOTIFY_LIST);
-
             }
         });
 
     }
 
-    private void convertJson2UI(String body){
-        Gson gson = new Gson();
-        List<CmtNotifyItem> cmtNotifyItems = gson.fromJson(body, new TypeToken<List<CmtNotifyItem>>(){}.getType());
-        NotifyCmtAdapter adapter = new NotifyCmtAdapter(cmtNotifyItems);
-        mRecyclerView.setAdapter(adapter);
+    @Override
+    public void onRefresh() {
+        getData();
     }
-
 }

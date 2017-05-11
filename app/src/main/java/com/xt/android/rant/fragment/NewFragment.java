@@ -9,10 +9,12 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +28,9 @@ import com.xt.android.rant.adapter.NewAdapter;
 import com.xt.android.rant.utils.SpaceItemDecoration;
 import com.xt.android.rant.utils.TokenUtil;
 import com.xt.android.rant.wrapper.RantItem;
+import com.xt.android.rant.wrapper.StarNotifyItem;
+
+import org.litepal.crud.DataSupport;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -40,13 +45,13 @@ import okhttp3.Response;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class NewFragment extends Fragment {
+public class NewFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener{
 
     private static final int MSG_GET_RANT_LIST = 0;
     private static final String TAG = "NewFragment";
     private Toolbar mToolbar;
     private RecyclerView mRecyclerView;
-    private ProgressBar mProgressBar;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
     private FloatingActionButton mFAB;
 
     private String mJson;
@@ -78,8 +83,9 @@ public class NewFragment extends Fragment {
         AppCompatActivity activity = (AppCompatActivity) getActivity();
         activity.setSupportActionBar(mToolbar);
         activity.getSupportActionBar().setDisplayShowTitleEnabled(false);
-
-        mProgressBar = (ProgressBar)view.findViewById(R.id.fragment_new_progress_bar);
+        mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.fragment_new_swipe_refresh_layout);
+        mSwipeRefreshLayout.setOnRefreshListener(this);
+        mSwipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.colorPrimary));
         mRecyclerView = (RecyclerView)view.findViewById(R.id.fragment_new_recycler_view);
         mFAB = (FloatingActionButton) view.findViewById(R.id.fragment_new_fab);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
@@ -88,15 +94,38 @@ public class NewFragment extends Fragment {
         mRecyclerView.addItemDecoration(new SpaceItemDecoration(1));
         mRecyclerView.setAdapter(new NewAdapter(new ArrayList<RantItem>()));
 
-        getData();
+
+        List<RantItem> rantItemsFromDatabase = DataSupport.findAll(RantItem.class);
+
+        if(rantItemsFromDatabase.size()==0){
+            Log.i(TAG, "onCreateView: rantItemsFromDatabase is null");
+            mSwipeRefreshLayout.setRefreshing(true);
+            getData();
+        }
+        else{
+
+            NewAdapter adapter = new NewAdapter(rantItemsFromDatabase);
+            mRecyclerView.setAdapter(adapter);
+        }
+
+
+
+
+
+
 
         mHandler = new Handler(){
             @Override
             public void handleMessage(Message msg) {
                 switch (msg.what){
                     case MSG_GET_RANT_LIST:
-                        convertJson2UI(mJson);
-                        mProgressBar.setVisibility(View.INVISIBLE);
+                        Gson gson = new Gson();
+                        List<RantItem> rantItems = gson.fromJson(mJson, new TypeToken<List<RantItem>>(){}.getType());
+                        NewAdapter adapter = new NewAdapter(rantItems);
+                        DataSupport.deleteAll(RantItem.class);
+                        DataSupport.saveAll(rantItems);
+                        mRecyclerView.setAdapter(adapter);
+                        mSwipeRefreshLayout.setRefreshing(false);
                         break;
                 }
             }
@@ -110,10 +139,6 @@ public class NewFragment extends Fragment {
                 startActivity(intent);
             }
         });
-
-
-
-
 
         return view;
     }
@@ -134,8 +159,7 @@ public class NewFragment extends Fragment {
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-                String jsonBody = response.body().string();
-                mJson = jsonBody;
+                mJson = response.body().string();
                 mHandler.sendEmptyMessage(MSG_GET_RANT_LIST);
 
             }
@@ -143,17 +167,9 @@ public class NewFragment extends Fragment {
 
     }
 
-    private void convertJson2UI(String body){
-        Gson gson = new Gson();
-        List<RantItem> rantItemList = gson.fromJson(body, new TypeToken<List<RantItem>>(){}.getType());
-        NewAdapter adapter = new NewAdapter(rantItemList);
-        mRecyclerView.setAdapter(adapter);
+
+    @Override
+    public void onRefresh() {
+        getData();
     }
-
-
-
-
-
-
-
 }

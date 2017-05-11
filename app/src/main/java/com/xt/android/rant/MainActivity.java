@@ -17,13 +17,23 @@ import android.util.Log;
 import com.ashokvarma.bottomnavigation.BadgeItem;
 import com.ashokvarma.bottomnavigation.BottomNavigationBar;
 import com.ashokvarma.bottomnavigation.BottomNavigationItem;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.xt.android.rant.fragment.HotFragment;
 import com.xt.android.rant.fragment.MoreFragment;
 import com.xt.android.rant.fragment.NewFragment;
 import com.xt.android.rant.fragment.NotifyFragment;
 import com.xt.android.rant.utils.TokenUtil;
+import com.xt.android.rant.wrapper.CmtNotifyItem;
+import com.xt.android.rant.wrapper.RantItem;
+import com.xt.android.rant.wrapper.StarNotifyItem;
+
+import org.litepal.crud.DataSupport;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -33,13 +43,20 @@ import okhttp3.Response;
 
 public class MainActivity extends AppCompatActivity implements BottomNavigationBar.OnTabSelectedListener{
     private static final String TAG = "MainActivity";
-    private static final int MSG_GET_NOTIFY_DATA = 1;
+    private static final int MSG_GET_DATA = 1;
+    private boolean gotCMT = false;
+    private boolean gotStar = false;
     private HotFragment mHotFragment;
     private NewFragment mNewFragment;
     private NotifyFragment mNotifyFragment;
     private MoreFragment mMoreFragment;
     private int index = 0;
     private Handler mHandler;
+    private Timer mTimer;
+
+    private BadgeItem notifyBadgeItem;
+    private String cmtJson;
+    private String starJson;
 
     public static MainActivity sMainActivity;
 
@@ -50,29 +67,59 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationB
         setContentView(R.layout.activity_main);
         sMainActivity = this;
 
-        mHandler = new Handler(){
+
+
+        TimerTask checkTask = new TimerTask() {
             @Override
-            public void handleMessage(Message msg) {
-                switch(msg.what){
-                    case MSG_GET_NOTIFY_DATA:
-                        break;
+            public void run() {
+                Log.i(TAG, "run: notifies have not been downloaded yet");
+                if(gotCMT && gotStar){
+                    mHandler.sendEmptyMessage(MSG_GET_DATA);
                 }
             }
         };
-        BottomNavigationBar mBar  = (BottomNavigationBar) findViewById(R.id.activity_main_navigation_bar);
+        mTimer = new Timer();
+        mTimer.schedule(checkTask, 100, 100);
+
+
+
+        final BottomNavigationBar mBar  = (BottomNavigationBar) findViewById(R.id.activity_main_navigation_bar);
         mBar.setMode(BottomNavigationBar.MODE_FIXED);
         mBar.setBackgroundStyle(BottomNavigationBar.BACKGROUND_STYLE_STATIC);
-
-
+        notifyBadgeItem = new BadgeItem().setBackgroundColor(getResources().getColor(R.color.colorAccentLight)).setText("99").setHideOnSelect(true);
         mBar.addItem(new BottomNavigationItem(R.drawable.ic_bar_new).setActiveColorResource(R.color.colorPrimary))
                 .addItem(new BottomNavigationItem(R.drawable.ic_bar_hot).setActiveColorResource(R.color.colorPrimary))
                 .addItem(new BottomNavigationItem(R.drawable.ic_bar_noti).setActiveColorResource(R.color.colorPrimary)
-                        .setBadgeItem(new BadgeItem().setBackgroundColor(getResources().getColor(R.color.colorAccentLight)).setText("99").setHideOnSelect(true)))
+                        .setBadgeItem(notifyBadgeItem))
                 .addItem(new BottomNavigationItem(R.drawable.ic_bar_more).setActiveColorResource(R.color.colorPrimary))
                 .setFirstSelectedPosition(index)
                 .initialise();
         setDefaultFragment();
         mBar.setTabSelectedListener(this);
+
+
+
+        mHandler = new Handler(){
+            @Override
+            public void handleMessage(Message msg) {
+                switch(msg.what){
+                    case MSG_GET_DATA:
+                        Log.i(TAG, "handleMessage: notifies have been downloaded");
+                        mTimer.cancel();
+                        Gson gson = new Gson();
+                        List<CmtNotifyItem> cmtNotifyItems = gson.fromJson(cmtJson, new TypeToken<List<CmtNotifyItem>>(){}.getType());
+                        List<StarNotifyItem> starNotifyItems = gson.fromJson(starJson, new TypeToken<List<StarNotifyItem>>(){}.getType());
+                        DataSupport.deleteAll(CmtNotifyItem.class);
+                        DataSupport.deleteAll(StarNotifyItem.class);
+                        DataSupport.saveAll(cmtNotifyItems);
+                        DataSupport.saveAll(starNotifyItems);
+                        notifyBadgeItem.setText(String.valueOf(cmtNotifyItems.size()+starNotifyItems.size()));
+                        break;
+                }
+            }
+        };
+
+        getData();
     }
 
 
@@ -85,6 +132,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationB
     }
 
 
+    //拦截Back键，避免回到LauncherActivity
     @Override
     public void onBackPressed() {
 //        super.onBackPressed();
@@ -142,26 +190,40 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationB
 
     }
 
-    //启动获取notifies
-    private void getNotifies(){
+
+    //启动获取通知
+    private void getData(){
         String ip = getResources().getString(R.string.ip_server);
         OkHttpClient mClient = new OkHttpClient();
-        Request request = new Request.Builder()
+        Request cmtRequest = new Request.Builder()
                 .url(ip+"api/getCmtNotify.action?token="+ TokenUtil.getToken(this))
                 .build();
-        Call call = mClient.newCall(request);
-        call.enqueue(new Callback() {
+        mClient.newCall(cmtRequest).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-
+                // TODO: 2017/5/11
             }
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-                String jsonBody = response.body().string();
-                //mJson = jsonBody;
-                mHandler.sendEmptyMessage(MSG_GET_NOTIFY_DATA);
+                cmtJson = response.body().string();
+                gotCMT = true;
+            }
+        });
 
+        Request starRequest = new Request.Builder()
+                .url(ip+"api/getStarNotify.action?token="+ TokenUtil.getToken(this))
+                .build();
+        mClient.newCall(starRequest).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                // TODO: 2017/5/11
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                starJson = response.body().string();
+                gotStar = true;
             }
         });
 

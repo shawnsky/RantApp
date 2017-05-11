@@ -25,6 +25,8 @@ import com.xt.android.rant.utils.SpaceItemDecoration;
 import com.xt.android.rant.utils.TokenUtil;
 import com.xt.android.rant.wrapper.RantItem;
 
+import org.litepal.crud.DataSupport;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -44,7 +46,6 @@ public class HotFragment extends Fragment {
     private static final String TAG = "HotFragment";
     private Toolbar mToolbar;
     private RecyclerView mRecyclerView;
-    private ProgressBar mProgressBar;
     private FloatingActionButton mFAB;
 
     private String mJson;
@@ -80,7 +81,7 @@ public class HotFragment extends Fragment {
         activity.getSupportActionBar().setDisplayShowTitleEnabled(false);
         activity.setSupportActionBar(mToolbar);
 
-        mProgressBar = (ProgressBar)view.findViewById(R.id.fragment_hot_progress_bar);
+
         mRecyclerView = (RecyclerView)view.findViewById(R.id.fragment_hot_recycler_view);
         mFAB = (FloatingActionButton) view.findViewById(R.id.fragment_hot_fab);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
@@ -88,19 +89,30 @@ public class HotFragment extends Fragment {
         mRecyclerView.addItemDecoration(new SpaceItemDecoration(1));
         mRecyclerView.setAdapter(new NewAdapter(new ArrayList<RantItem>()));
 
-        getData();
 
-        mHandler = new Handler(){
-            @Override
-            public void handleMessage(Message msg) {
-                switch (msg.what){
-                    case MSG_GET_RANT_LIST:
-                        convertJson2UI(mJson);
-                        mProgressBar.setVisibility(View.INVISIBLE);
-                        break;
-                }
-            }
-        };
+        List<RantItem> rantItemsFromDatabase = DataSupport.findAll(RantItem.class);
+        List<RantItem> hotRantList = new ArrayList<>();
+        for(RantItem rantItem:rantItemsFromDatabase){
+            if(Math.abs(rantItem.getRantValue())>=5 || rantItem.getCommentsNum()>=5) hotRantList.add(rantItem);
+        }
+        NewAdapter adapter = new NewAdapter(hotRantList);
+        mRecyclerView.setAdapter(adapter);
+
+
+
+        //getData();
+
+//        mHandler = new Handler(){
+//            @Override
+//            public void handleMessage(Message msg) {
+//                switch (msg.what){
+//                    case MSG_GET_RANT_LIST:
+//                        convertJson2UI(mJson);
+//
+//                        break;
+//                }
+//            }
+//        };
 
 
         mFAB.setOnClickListener(new View.OnClickListener() {

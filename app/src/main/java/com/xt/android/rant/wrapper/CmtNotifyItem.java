@@ -1,11 +1,13 @@
 package com.xt.android.rant.wrapper;
 
+import org.litepal.crud.DataSupport;
+
 import java.util.Date;
 
 /**
  * Created by admin on 2017/5/10.
  */
-public class CmtNotifyItem {
+public class CmtNotifyItem extends DataSupport{
     private Integer commentId;
 
     private Integer userId;

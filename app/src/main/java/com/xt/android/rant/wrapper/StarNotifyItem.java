@@ -1,9 +1,11 @@
 package com.xt.android.rant.wrapper;
 
+import org.litepal.crud.DataSupport;
+
 /**
  * Created by admin on 2017/5/10.
  */
-public class StarNotifyItem {
+public class StarNotifyItem extends DataSupport{
     private Integer starId;
 
     private Integer userId;

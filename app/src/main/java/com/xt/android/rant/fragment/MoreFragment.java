@@ -16,6 +16,10 @@ import android.widget.Button;
 import com.xt.android.rant.LauncherActivity;
 import com.xt.android.rant.MainActivity;
 import com.xt.android.rant.R;
+import com.xt.android.rant.wrapper.RantItem;
+
+import org.litepal.crud.DataSupport;
+import org.litepal.tablemanager.Connector;
 
 import java.io.IOException;
 
@@ -35,6 +39,7 @@ public class MoreFragment extends Fragment {
     private Toolbar mToolbar;
     private Button mLogoutButton;
     private OkHttpClient mClient;
+    private Button mDbButton;
 
 
     public static MoreFragment newInstance(String param1) {
@@ -69,6 +74,14 @@ public class MoreFragment extends Fragment {
                 logout();
             }
         });
+        mDbButton = (Button) view.findViewById(R.id.fragment_more_btn_db);
+        mDbButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                DataSupport.deleteAll(RantItem.class);
+            }
+        });
+
 
         return view;
     }

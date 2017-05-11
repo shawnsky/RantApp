@@ -78,8 +78,6 @@ public class NewAdapter extends RecyclerView.Adapter<NewAdapter.ViewHolder> {
             linearLayout = (LinearLayout) itemView.findViewById(R.id.item_rant_item_ll_clickable);
 
             linearLayout.setOnClickListener(this);
-            upCheckbox.setOnCheckedChangeListener(this);
-            downCheckbox.setOnCheckedChangeListener(this);
 
 
 
@@ -108,6 +106,9 @@ public class NewAdapter extends RecyclerView.Adapter<NewAdapter.ViewHolder> {
                 upCheckbox.setChecked(false);
                 downCheckbox.setChecked(false);
             }
+            //在这里注册是避免上面的setChecked也被监听处理
+            upCheckbox.setOnCheckedChangeListener(this);
+            downCheckbox.setOnCheckedChangeListener(this);
         }
 
 

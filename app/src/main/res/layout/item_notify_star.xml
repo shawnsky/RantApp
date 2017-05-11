@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+
+              android:layout_width="match_parent"
+              android:layout_height="50dp"
+    android:background="@color/white">
+    <ImageView
+        android:id="@+id/item_notify_star_iv_avatar"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginStart="16dp"
+        android:layout_centerVertical="true"
+        tools:background="@color/gray"/>
+    <TextView
+        android:id="@+id/item_notify_star_tv_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_toEndOf="@id/item_notify_star_iv_avatar"
+        android:textColor="@color/colorPrimary"
+        android:textStyle="bold"
+        android:layout_centerVertical="true"
+        tools:text="李铁柱"/>
+
+    <TextView
+        android:id="@+id/item_notify_star_tv_flag"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_toEndOf="@id/item_notify_star_tv_name"
+        android:layout_centerVertical="true"
+        android:textColor="@color/black"
+        tools:text="赞了你的Rant!"/>
+
+</RelativeLayout>

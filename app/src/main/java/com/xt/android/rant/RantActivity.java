@@ -109,8 +109,7 @@ public class RantActivity extends AppCompatActivity implements View.OnClickListe
         mShareButton = (ImageView) findViewById(R.id.activity_rant_share);
         mPostButton = (Button) findViewById(R.id.activity_rant_btn_submit);
 
-        mUpCheckbox.setOnCheckedChangeListener(this);
-        mDownCheckbox.setOnCheckedChangeListener(this);
+
         mUserInfoLayout.setOnClickListener(this);
         mWeChatShareButton.setOnClickListener(this);
         mQuanShareButton.setOnClickListener(this);
@@ -180,8 +179,6 @@ public class RantActivity extends AppCompatActivity implements View.OnClickListe
             mNameTextView.setText(R.string.rant_hidden_user_name);
         }
         else mNameTextView.setText(mDetailItem.getUserName());
-        // TODO: 2017/5/2  mUpButton
-        // TODO: 2017/5/2  mDownButton
         mValueTextView.setText(String.valueOf(mDetailItem.getRantValue()));
         SimpleDateFormat sdf = new SimpleDateFormat("yy/MM/dd hh:mm");
         mDateTextView.setText(sdf.format(mDetailItem.getRantDate()));
@@ -199,6 +196,9 @@ public class RantActivity extends AppCompatActivity implements View.OnClickListe
             mUpCheckbox.setChecked(false);
             mDownCheckbox.setChecked(false);
         }
+        //在这里注册是避免上面的setChecked也被监听处理
+        mUpCheckbox.setOnCheckedChangeListener(this);
+        mDownCheckbox.setOnCheckedChangeListener(this);
 
 
         List<CommentItem> commentItems = mDetailItem.getCommentList();

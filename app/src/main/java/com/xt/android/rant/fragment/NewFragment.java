@@ -84,6 +84,7 @@ public class NewFragment extends Fragment {
         mFAB = (FloatingActionButton) view.findViewById(R.id.fragment_new_fab);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(layoutManager);
+
         mRecyclerView.addItemDecoration(new SpaceItemDecoration(1));
         mRecyclerView.setAdapter(new NewAdapter(new ArrayList<RantItem>()));
 

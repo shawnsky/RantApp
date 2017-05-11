@@ -42,6 +42,7 @@ public class PostActivity extends AppCompatActivity {
     private Button mButton;
     private TextView mIsHidden;
     private TextView mHiddenInfo;
+    private TextView mTextLimit;
     private ProgressDialog mProgressDialog;
     private Toolbar mToolbar;
 
@@ -60,6 +61,7 @@ public class PostActivity extends AppCompatActivity {
         mEditText = (EditText) findViewById(R.id.activity_post_et_content);
         mButton = (Button) findViewById(R.id.activity_post_btn_submit);
         mToolbar = (Toolbar) findViewById(R.id.activity_post_toolbar);
+        mTextLimit = (TextView) findViewById(R.id.activity_post_word_limit_info);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         mToolbar.setNavigationIcon(R.drawable.ic_action_close);
@@ -90,12 +92,21 @@ public class PostActivity extends AppCompatActivity {
         mButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mProgressDialog.show();
-                post();
+                if(mEditText.getText().toString().equals("")){
+                    mTextLimit.setText(R.string.post_not_null);
+                    mTextLimit.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
+                }
+                else{
+                    mProgressDialog.show();
+                    post();
+                }
+
 
 
             }
         });
+
+
 
         mSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override

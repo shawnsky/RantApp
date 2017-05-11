@@ -29,6 +29,22 @@
         <item name="android:button">@drawable/custom_checkbox_down</item>
     </style>
 
+    <style name="MyCustomTabLayout" parent="Base.Widget.Design.TabLayout">
+        <item name="tabIndicatorColor">@color/colorPrimary</item>
+        <item name="tabIndicatorHeight">3dp</item>
+        <item name="android:elevation">0dp</item>
+        <item name="tabTextAppearance">@style/MyCustomTabTextAppearance</item>
+        <item name="tabSelectedTextColor">@color/colorPrimary</item>
+    </style>
+
+    <style name="MyCustomTabTextAppearance" parent="TextAppearance.Design.Tab">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/colorPrimaryLight</item>
+
+        <item name="textAllCaps">true</item>
+    </style>
+
 
 
 </resources>

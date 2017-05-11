@@ -53,12 +53,11 @@
 
 
     <!--通知界面-->
-    <string name="notify_title">通知</string>
+    <string name="notify_title">动态</string>
 
 
     <!--更多界面-->
     <string name="more_title">更多</string>
-
 
 
     <!--RantDetail界面-->
@@ -71,10 +70,18 @@
     <!--发布Rant界面-->
     <string name="post_title">发布新的Rant</string>
     <string name="post_content_hint">这里输入Rant内容</string>
+    <string name="post_not_null">发布内容不能为空</string>
     <string name="post_text_limit">150字</string>
     <string name="post_button">发布</string>
     <string name="post_hidden_info">你正要发布一条匿名的Rant内容，别人无法查看你的个人信息，但你可以在个人中心管理这条内容，也可以收到关于这条内容的动态。</string>
     <string name="post_error_post_failed">发送失败</string>
     <string name="post_status_hidden">匿名</string>
     <string name="post_status_public">公开</string>
+
+
+    <!--通知界面-->
+    <string name="notify_cmt_cmt_head">回复我: </string>
+    <string name="notify_cmt_rant_head">我的Rant: </string>
+    <string name="notify_star_flag_up">赞了你的Rant！</string>
+    <string name="notify_star_flag_down">朝你扔了鸡蛋！</string>
 </resources>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <litepal>
     <dbname value="LocalDatabase"></dbname>
-    <version value="1"></version>
+    <version value="2"></version>
     <list>
         <mapping class="com.xt.android.rant.wrapper.RantItem"></mapping>
         <mapping class="com.xt.android.rant.wrapper.CmtNotifyItem"></mapping>

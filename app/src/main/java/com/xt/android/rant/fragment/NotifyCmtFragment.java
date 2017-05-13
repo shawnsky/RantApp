@@ -27,6 +27,8 @@ import org.litepal.crud.DataSupport;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import okhttp3.Call;
@@ -87,6 +89,16 @@ public class NotifyCmtFragment extends Fragment implements SwipeRefreshLayout.On
                     case MSG_GET_NOTIFY_LIST:
                         Gson gson = new Gson();
                         List<CmtNotifyItem> cmtNotifyItems = gson.fromJson(mJson, new TypeToken<List<CmtNotifyItem>>(){}.getType());
+                        Collections.sort(cmtNotifyItems, new Comparator<CmtNotifyItem>() {
+                            @Override
+                            public int compare(CmtNotifyItem cmtNotifyItem, CmtNotifyItem t1) {
+                                if (cmtNotifyItem.getCommentDate().after(t1.getCommentDate())) {
+                                    return 1;
+                                } else {
+                                    return -1;
+                                }
+                            }
+                        });
                         NotifyCmtAdapter adapter = new NotifyCmtAdapter(cmtNotifyItems);
                         DataSupport.deleteAll(CmtNotifyItem.class);
                         DataSupport.saveAll(cmtNotifyItems);

@@ -25,6 +25,8 @@ import org.litepal.crud.DataSupport;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import okhttp3.Call;
@@ -84,6 +86,15 @@ public class NotifyStarFragment extends Fragment implements SwipeRefreshLayout.O
                     case MSG_GET_NOTIFY_LIST:
                         Gson gson = new Gson();
                         List<StarNotifyItem> starNotifyItems = gson.fromJson(mJson, new TypeToken<List<StarNotifyItem>>(){}.getType());
+                        Collections.sort(starNotifyItems, new Comparator<StarNotifyItem>() {
+                            @Override
+                            public int compare(StarNotifyItem starNotifyItem, StarNotifyItem t1) {
+                                if(starNotifyItem.getStarDate().after(t1.getStarDate()))
+                                    return 1;
+                                else
+                                    return -1;
+                            }
+                        });
                         NotifyStarAdapter adapter = new NotifyStarAdapter(starNotifyItems);
                         DataSupport.deleteAll(StarNotifyItem.class);
                         DataSupport.saveAll(starNotifyItems);

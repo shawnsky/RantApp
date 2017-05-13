@@ -2,6 +2,8 @@ package com.xt.android.rant.wrapper;
 
 import org.litepal.crud.DataSupport;
 
+import java.util.Date;
+
 /**
  * Created by admin on 2017/5/10.
  */
@@ -15,6 +17,8 @@ public class StarNotifyItem extends DataSupport{
     private Integer starValue;
 
     private Integer starRead;
+
+    private Date starDate;
 
     //new
 
@@ -38,6 +42,14 @@ public class StarNotifyItem extends DataSupport{
 
     public void setUserId(Integer userId) {
         this.userId = userId;
+    }
+
+    public Date getStarDate() {
+        return starDate;
+    }
+
+    public void setStarDate(Date starDate) {
+        this.starDate = starDate;
     }
 
     public Integer getRantId() {

@@ -36,6 +36,12 @@
         <activity android:name=".PostActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         </activity>
+
+        <service
+            android:name=".service.PullService"
+            android:enabled="true"
+            android:exported="true">
+        </service>
     </application>
 
 </manifest>

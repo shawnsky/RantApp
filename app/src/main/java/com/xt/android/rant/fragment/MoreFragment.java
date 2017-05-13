@@ -16,7 +16,9 @@ import android.widget.Button;
 import com.xt.android.rant.LauncherActivity;
 import com.xt.android.rant.MainActivity;
 import com.xt.android.rant.R;
+import com.xt.android.rant.wrapper.CmtNotifyItem;
 import com.xt.android.rant.wrapper.RantItem;
+import com.xt.android.rant.wrapper.StarNotifyItem;
 
 import org.litepal.crud.DataSupport;
 import org.litepal.tablemanager.Connector;
@@ -78,7 +80,10 @@ public class MoreFragment extends Fragment {
         mDbButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                DataSupport.deleteAll(StarNotifyItem.class);
+                DataSupport.deleteAll(CmtNotifyItem.class);
                 DataSupport.deleteAll(RantItem.class);
+                //Connector.getDatabase();
             }
         });
 

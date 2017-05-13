@@ -80,8 +80,8 @@
 
 
     <!--通知界面-->
-    <string name="notify_cmt_cmt_head">回复我: </string>
-    <string name="notify_cmt_rant_head">我的Rant: </string>
+    <string name="notify_cmt_cmt_head">回复我:</string>
+    <string name="notify_cmt_rant_head">我的Rant:</string>
     <string name="notify_star_flag_up">赞了你的Rant！</string>
     <string name="notify_star_flag_down">朝你扔了鸡蛋！</string>
 </resources>

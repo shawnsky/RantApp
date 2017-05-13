@@ -3,6 +3,7 @@ package com.xt.android.rant;
 import android.app.Activity;
 import android.content.Intent;
 
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Handler;
 import android.os.Message;
@@ -20,9 +21,11 @@ import com.ashokvarma.bottomnavigation.BottomNavigationItem;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.xt.android.rant.fragment.HotFragment;
+import com.xt.android.rant.fragment.LoginFragment;
 import com.xt.android.rant.fragment.MoreFragment;
 import com.xt.android.rant.fragment.NewFragment;
 import com.xt.android.rant.fragment.NotifyFragment;
+import com.xt.android.rant.service.PullService;
 import com.xt.android.rant.utils.TokenUtil;
 import com.xt.android.rant.wrapper.CmtNotifyItem;
 import com.xt.android.rant.wrapper.RantItem;
@@ -31,6 +34,7 @@ import com.xt.android.rant.wrapper.StarNotifyItem;
 import org.litepal.crud.DataSupport;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -67,6 +71,8 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationB
         setContentView(R.layout.activity_main);
         sMainActivity = this;
 
+        Intent intent = new Intent(MainActivity.this, PullService.class);
+        startService(intent);
 
 
         TimerTask checkTask = new TimerTask() {
@@ -104,16 +110,27 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationB
             public void handleMessage(Message msg) {
                 switch(msg.what){
                     case MSG_GET_DATA:
-                        Log.i(TAG, "handleMessage: notifies have been downloaded");
+                        Log.i(TAG, "handleMessage: both cmt and star notifies have been downloaded");
                         mTimer.cancel();
                         Gson gson = new Gson();
                         List<CmtNotifyItem> cmtNotifyItems = gson.fromJson(cmtJson, new TypeToken<List<CmtNotifyItem>>(){}.getType());
                         List<StarNotifyItem> starNotifyItems = gson.fromJson(starJson, new TypeToken<List<StarNotifyItem>>(){}.getType());
+                        Log.i(TAG, "handleMessage: cmtSize="+cmtNotifyItems.size());
+                        Log.i(TAG, "handleMessage: starSize="+starNotifyItems.size());
                         DataSupport.deleteAll(CmtNotifyItem.class);
                         DataSupport.deleteAll(StarNotifyItem.class);
                         DataSupport.saveAll(cmtNotifyItems);
                         DataSupport.saveAll(starNotifyItems);
-                        notifyBadgeItem.setText(String.valueOf(cmtNotifyItems.size()+starNotifyItems.size()));
+                        SharedPreferences sharedPreferences = getSharedPreferences("notify", Activity.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.putString("cmt", String.valueOf(cmtNotifyItems.size()));
+                        editor.putString("star", String.valueOf(starNotifyItems.size()));
+                        editor.apply();
+
+                        List<CmtNotifyItem> cmtNoRead = DataSupport.where("commentRead = ?", "0").find(CmtNotifyItem.class);
+                        List<StarNotifyItem> starNoRead = DataSupport.where("starRead = ?", "0").find(StarNotifyItem.class);
+                        notifyBadgeItem.setText(String.valueOf(cmtNoRead.size()+starNoRead.size()));
+
                         break;
                 }
             }
@@ -195,6 +212,33 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationB
     private void getData(){
         String ip = getResources().getString(R.string.ip_server);
         OkHttpClient mClient = new OkHttpClient();
+//        //接口参数有date，用于只获取date之后的数据，默认获取全部
+//        long lastCmtTime = 0;
+//        long lastStarTime = 0;
+//        //本地已经有落地数据，只需获取新的
+//        if(DataSupport.findAll(CmtNotifyItem.class)!=null && DataSupport.findAll(CmtNotifyItem.class).size()>0){
+//            List<CmtNotifyItem> cmts = DataSupport.findAll(CmtNotifyItem.class);
+//            long maxLong = 0;
+//            for(CmtNotifyItem c:cmts){
+//                maxLong = Math.max(maxLong, c.getCommentDate().getTime());
+//            }
+////            lastCmtTime = DataSupport.findLast(CmtNotifyItem.class).getCommentDate().getTime();
+////            Log.i(TAG, "getData: lastTime="+DataSupport.findLast(CmtNotifyItem.class).getCommentDate().toString());
+////            Log.i(TAG, "getData: firstTim="+DataSupport.findFirst(CmtNotifyItem.class).getCommentDate().toString());
+////            Log.i(TAG, "getData: nowTimee="+new Date().toString());
+//            lastCmtTime = maxLong;
+//        }
+//        if(DataSupport.findAll(StarNotifyItem.class)!=null && DataSupport.findAll(StarNotifyItem.class).size()>0){
+//            List<StarNotifyItem> stars = DataSupport.findAll(StarNotifyItem.class);
+//            long maxLong = 0;
+//            for(StarNotifyItem s:stars){
+//                maxLong = Math.max(maxLong, s.getStarDate().getTime());
+//            }
+//            //lastStarTime = DataSupport.findLast(StarNotifyItem.class).getStarDate().getTime();
+//            lastStarTime = maxLong;
+//        }
+//
+
         Request cmtRequest = new Request.Builder()
                 .url(ip+"api/getCmtNotify.action?token="+ TokenUtil.getToken(this))
                 .build();
@@ -207,6 +251,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationB
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 cmtJson = response.body().string();
+                Log.i(TAG, "onResponse: "+cmtJson);
                 gotCMT = true;
             }
         });

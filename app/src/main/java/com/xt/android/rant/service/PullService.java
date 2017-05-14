@@ -24,7 +24,10 @@ import com.xt.android.rant.wrapper.StarNotifyItem;
 
 import org.litepal.crud.DataSupport;
 
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -66,59 +69,73 @@ public class PullService extends Service {
 
         public boolean isRunning = true;
 
+        Gson gson = new Gson();
+
         public void run() {
             while (isRunning) {
                 try {
                     // 间隔时间半小时
-//                    Thread.sleep(1000*60*30);
-                    Thread.sleep(1000*1);//1s
-                    // 获取服务器消息
-                    int cmt = Integer.parseInt(download(ip+"api/getCmtNotifyCnt.action?token="+ TokenUtil.getToken(MainActivity.sMainActivity)));
-                    int star = Integer.parseInt(download(ip+"api/getStarNotifyCnt.action?token="+ TokenUtil.getToken(MainActivity.sMainActivity)));
-                    // 获取上次消息
-                    int sharedCmt = MainActivity.sMainActivity.getSharedPreferences("notify", MODE_PRIVATE).getInt("cmt", 0);
-                    int sharedStar = MainActivity.sMainActivity.getSharedPreferences("notify", MODE_PRIVATE).getInt("star", 0);
+                    //Thread.sleep(1000*60*30);
+                    Thread.sleep(1000*5);//5s
 
-                    //有新消息推送
-                    if (cmt>sharedCmt) {
-                        String json = download(ip+"api/getCmtNotify.action?token="+TokenUtil.getToken(MainActivity.sMainActivity));
-                        Gson gson = new Gson();
-                        List<CmtNotifyItem> cmtNotifyItems = gson.fromJson(json, new TypeToken<List<CmtNotifyItem>>(){}.getType());
-                        List<CmtNotifyItem> cmtNotifyItemsFromDb = DataSupport.findAll(CmtNotifyItem.class);
-                        CmtNotifyItem target = null;
-                        for(CmtNotifyItem cmtNotifyItem:cmtNotifyItems){
-                            if(!cmtNotifyItemsFromDb.contains(cmtNotifyItem)){
-                                target = cmtNotifyItem;
-                                break;
-                            }
+                    String cmtJson = download(ip+"api/getCmtNotify.action?token="+TokenUtil.getToken(MainActivity.sMainActivity));
+                    String starJson = download(ip+"api/getStarNotify.action?token="+TokenUtil.getToken(MainActivity.sMainActivity));
+
+                    List<CmtNotifyItem> cmtNotifyItems = gson.fromJson(cmtJson, new TypeToken<List<CmtNotifyItem>>(){}.getType());
+                    List<StarNotifyItem> starNotifyItems = gson.fromJson(starJson, new TypeToken<List<StarNotifyItem>>(){}.getType());
+                  
+
+
+                    List<CmtNotifyItem> cmtNotifyItemsFromDb = DataSupport.findAll(CmtNotifyItem.class);
+                    List<StarNotifyItem> starNotifyItemsFromDb = DataSupport.findAll(StarNotifyItem.class);
+                   
+
+                    HashSet<Integer> cmtNew = new HashSet<>();
+                    HashSet<Integer> starNew = new HashSet<>();
+                    for(CmtNotifyItem c:cmtNotifyItems){
+                        cmtNew.add(c.getCommentId());
+                    }
+                    for(StarNotifyItem s:starNotifyItems){
+                        starNew.add(s.getStarId());
+                    }
+
+                    for(CmtNotifyItem c:cmtNotifyItemsFromDb){
+                        if(cmtNew.contains(c.getCommentId())){
+                            cmtNew.remove(c.getCommentId());
+
                         }
-                        //推送一次
-                        if(target!=null){
-                            pushCmtNotify(target);
-                            SharedPreferences.Editor editor = MainActivity.sMainActivity.getSharedPreferences("notify", MODE_PRIVATE).edit();
-                            editor.putInt("cmt", cmt);
-                            editor.apply();
+                    }
+                    for(StarNotifyItem s:starNotifyItemsFromDb){
+                        if(starNew.contains(s.getStarId())){
+                            starNew.remove(s.getStarId());
+                        }
+                    }
+
+                    Iterator it0 = cmtNew.iterator();
+                    Iterator it1 = starNew.iterator();
+                    if(it0.hasNext()){
+                        int target = (Integer) it0.next();
+                        cmtNew.remove(target);
+                        for(CmtNotifyItem c:cmtNotifyItems){
+                            if(c.getCommentId()==target){
+                                pushCmtNotify(c);
+                                DataSupport.deleteAll(CmtNotifyItem.class);
+                                DataSupport.saveAll(cmtNotifyItems);
+                            }
                         }
 
                     }
-
-                    if(star>sharedStar){
-                        String json = download(ip+"api/getStarNotify.action?token="+TokenUtil.getToken(MainActivity.sMainActivity));
-                        Gson gson = new Gson();
-                        List<StarNotifyItem> starNotifyItems = gson.fromJson(json, new TypeToken<List<StarNotifyItem>>(){}.getType());
-                        List<StarNotifyItem> starNotifyItemsFromDb = DataSupport.findAll(StarNotifyItem.class);
-                        StarNotifyItem target = new StarNotifyItem();
-                        for(StarNotifyItem starNotifyItem:starNotifyItems){
-                            if(!starNotifyItemsFromDb.contains(starNotifyItem)){
-                                target = starNotifyItem;
-                                break;
+                    if(it1.hasNext()){
+                        int target = (Integer) it1.next();
+                        starNew.remove(target);
+                        for(StarNotifyItem s:starNotifyItems){
+                            if(s.getStarId()==target){
+                                pushStarNotify(s);
+                                DataSupport.deleteAll(StarNotifyItem.class);
+                                DataSupport.saveAll(starNotifyItems);
                             }
                         }
-                        //推送一次
-                        pushStarNotify(target);
-                        SharedPreferences.Editor editor = MainActivity.sMainActivity.getSharedPreferences("notify", MODE_PRIVATE).edit();
-                        editor.putInt("star", star);
-                        editor.apply();
+
                     }
 
                 } catch (InterruptedException e) {
@@ -148,7 +165,7 @@ public class PullService extends Service {
         PendingIntent pi = PendingIntent.getActivity(this, 0, mainIntent, 0);
         Notification notification = new NotificationCompat.Builder(this)
                 .setContentTitle("Rant社区")
-                .setContentText("有人回复了你的Rant，点击这里查看")
+                .setContentText(cmtNotifyItem.getUserName()+"回复你说: "+cmtNotifyItem.getCommentContent())
                 .setWhen(System.currentTimeMillis())
                 .setSmallIcon(R.drawable.ic_user)
                 .setLargeIcon(BitmapFactory.decodeResource(MainActivity.sMainActivity.getResources(),R.mipmap.ic_launcher))
@@ -164,7 +181,7 @@ public class PullService extends Service {
         PendingIntent pi = PendingIntent.getActivity(this, 0, mainIntent, 0);
         Notification notification = new NotificationCompat.Builder(this)
                 .setContentTitle("Rant社区")
-                .setContentText(starNotifyItem.getStarValue()==1?"有人赞了你，点击这里查看":"有人朝你扔了鸡蛋，点击这里查看")
+                .setContentText(starNotifyItem.getStarValue()==1?starNotifyItem.getUserName()+"赞了你，点击这里查看":starNotifyItem.getUserName()+"朝你扔了鸡蛋，点击这里查看")
                 .setWhen(System.currentTimeMillis())
                 .setSmallIcon(R.drawable.ic_user)
                 .setLargeIcon(BitmapFactory.decodeResource(MainActivity.sMainActivity.getResources(),R.mipmap.ic_launcher))

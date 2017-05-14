@@ -123,11 +123,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationB
                         DataSupport.deleteAll(StarNotifyItem.class);
                         DataSupport.saveAll(cmtNotifyItems);
                         DataSupport.saveAll(starNotifyItems);
-                        SharedPreferences sharedPreferences = getSharedPreferences("notify", Activity.MODE_PRIVATE);
-                        SharedPreferences.Editor editor = sharedPreferences.edit();
-                        editor.putInt("cmt", cmtNotifyItems.size());
-                        editor.putInt("star", starNotifyItems.size());
-                        editor.apply();
+
 
                         List<CmtNotifyItem> cmtNoRead = DataSupport.where("commentRead = ?", "0").find(CmtNotifyItem.class);
                         List<StarNotifyItem> starNoRead = DataSupport.where("starRead = ?", "0").find(StarNotifyItem.class);
@@ -214,33 +210,6 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationB
     private void getData(){
         String ip = getResources().getString(R.string.ip_server);
         OkHttpClient mClient = new OkHttpClient();
-//        //接口参数有date，用于只获取date之后的数据，默认获取全部
-//        long lastCmtTime = 0;
-//        long lastStarTime = 0;
-//        //本地已经有落地数据，只需获取新的
-//        if(DataSupport.findAll(CmtNotifyItem.class)!=null && DataSupport.findAll(CmtNotifyItem.class).size()>0){
-//            List<CmtNotifyItem> cmts = DataSupport.findAll(CmtNotifyItem.class);
-//            long maxLong = 0;
-//            for(CmtNotifyItem c:cmts){
-//                maxLong = Math.max(maxLong, c.getCommentDate().getTime());
-//            }
-////            lastCmtTime = DataSupport.findLast(CmtNotifyItem.class).getCommentDate().getTime();
-////            Log.i(TAG, "getData: lastTime="+DataSupport.findLast(CmtNotifyItem.class).getCommentDate().toString());
-////            Log.i(TAG, "getData: firstTim="+DataSupport.findFirst(CmtNotifyItem.class).getCommentDate().toString());
-////            Log.i(TAG, "getData: nowTimee="+new Date().toString());
-//            lastCmtTime = maxLong;
-//        }
-//        if(DataSupport.findAll(StarNotifyItem.class)!=null && DataSupport.findAll(StarNotifyItem.class).size()>0){
-//            List<StarNotifyItem> stars = DataSupport.findAll(StarNotifyItem.class);
-//            long maxLong = 0;
-//            for(StarNotifyItem s:stars){
-//                maxLong = Math.max(maxLong, s.getStarDate().getTime());
-//            }
-//            //lastStarTime = DataSupport.findLast(StarNotifyItem.class).getStarDate().getTime();
-//            lastStarTime = maxLong;
-//        }
-//
-
         Request cmtRequest = new Request.Builder()
                 .url(ip+"api/getCmtNotify.action?token="+ TokenUtil.getToken(this))
                 .build();

@@ -73,22 +73,19 @@ public class PullService extends Service {
 //                    Thread.sleep(1000*60*30);
                     Thread.sleep(1000*1);//1s
                     // 获取服务器消息
-                    String cmt = download(ip+"api/getCmtNotifyCnt.action?token="+ TokenUtil.getToken(MainActivity.sMainActivity));
-                    String star = download(ip+"api/getStarNotifyCnt.action?token="+ TokenUtil.getToken(MainActivity.sMainActivity));
+                    int cmt = Integer.parseInt(download(ip+"api/getCmtNotifyCnt.action?token="+ TokenUtil.getToken(MainActivity.sMainActivity)));
+                    int star = Integer.parseInt(download(ip+"api/getStarNotifyCnt.action?token="+ TokenUtil.getToken(MainActivity.sMainActivity)));
                     // 获取上次消息
-                    String sharedCmt = MainActivity.sMainActivity.getSharedPreferences("notify", MODE_PRIVATE).getString("cmt", "");
-                    String sharedStar = MainActivity.sMainActivity.getSharedPreferences("notify", MODE_PRIVATE).getString("star", "");
-
-                    Log.i(TAG, "run: Pulling:cmt:"+cmt+" sharedPull="+sharedCmt);
-                    Log.i(TAG, "run: Pulling:star:"+star+" sharedStar="+sharedStar);
+                    int sharedCmt = MainActivity.sMainActivity.getSharedPreferences("notify", MODE_PRIVATE).getInt("cmt", 0);
+                    int sharedStar = MainActivity.sMainActivity.getSharedPreferences("notify", MODE_PRIVATE).getInt("star", 0);
 
                     //有新消息推送
-                    if (!cmt.equals(sharedCmt)) {
+                    if (cmt>sharedCmt) {
                         String json = download(ip+"api/getCmtNotify.action?token="+TokenUtil.getToken(MainActivity.sMainActivity));
                         Gson gson = new Gson();
                         List<CmtNotifyItem> cmtNotifyItems = gson.fromJson(json, new TypeToken<List<CmtNotifyItem>>(){}.getType());
                         List<CmtNotifyItem> cmtNotifyItemsFromDb = DataSupport.findAll(CmtNotifyItem.class);
-                        CmtNotifyItem target = new CmtNotifyItem();
+                        CmtNotifyItem target = null;
                         for(CmtNotifyItem cmtNotifyItem:cmtNotifyItems){
                             if(!cmtNotifyItemsFromDb.contains(cmtNotifyItem)){
                                 target = cmtNotifyItem;
@@ -96,14 +93,16 @@ public class PullService extends Service {
                             }
                         }
                         //推送一次
-                        pushCmtNotify(target);
-                        SharedPreferences.Editor editor = MainActivity.sMainActivity.getSharedPreferences("notify", MODE_PRIVATE).edit();
-                        editor.putString("cmt", cmt);
-                        editor.apply();
+                        if(target!=null){
+                            pushCmtNotify(target);
+                            SharedPreferences.Editor editor = MainActivity.sMainActivity.getSharedPreferences("notify", MODE_PRIVATE).edit();
+                            editor.putInt("cmt", cmt);
+                            editor.apply();
+                        }
 
                     }
 
-                    if(!star.equals(sharedStar)){
+                    if(star>sharedStar){
                         String json = download(ip+"api/getStarNotify.action?token="+TokenUtil.getToken(MainActivity.sMainActivity));
                         Gson gson = new Gson();
                         List<StarNotifyItem> starNotifyItems = gson.fromJson(json, new TypeToken<List<StarNotifyItem>>(){}.getType());
@@ -118,7 +117,7 @@ public class PullService extends Service {
                         //推送一次
                         pushStarNotify(target);
                         SharedPreferences.Editor editor = MainActivity.sMainActivity.getSharedPreferences("notify", MODE_PRIVATE).edit();
-                        editor.putString("star", star);
+                        editor.putInt("star", star);
                         editor.apply();
                     }
 

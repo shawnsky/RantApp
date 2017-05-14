@@ -89,20 +89,9 @@ public class NotifyCmtFragment extends Fragment implements SwipeRefreshLayout.On
                     case MSG_GET_NOTIFY_LIST:
                         Gson gson = new Gson();
                         List<CmtNotifyItem> cmtNotifyItems = gson.fromJson(mJson, new TypeToken<List<CmtNotifyItem>>(){}.getType());
-                        Collections.sort(cmtNotifyItems, new Comparator<CmtNotifyItem>() {
-                            @Override
-                            public int compare(CmtNotifyItem cmtNotifyItem, CmtNotifyItem t1) {
-                                if (cmtNotifyItem.getCommentDate().after(t1.getCommentDate())) {
-                                    return 1;
-                                } else {
-                                    return -1;
-                                }
-                            }
-                        });
-                        NotifyCmtAdapter adapter = new NotifyCmtAdapter(cmtNotifyItems);
                         DataSupport.deleteAll(CmtNotifyItem.class);
                         DataSupport.saveAll(cmtNotifyItems);
-                        mRecyclerView.setAdapter(adapter);
+                        mRecyclerView.setAdapter(new NotifyCmtAdapter(cmtNotifyItems));
                         mSwipeRefreshLayout.setRefreshing(false);
                         break;
                     default:

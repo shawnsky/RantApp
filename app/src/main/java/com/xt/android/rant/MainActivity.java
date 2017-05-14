@@ -113,6 +113,8 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationB
                         Log.i(TAG, "handleMessage: both cmt and star notifies have been downloaded");
                         mTimer.cancel();
                         Gson gson = new Gson();
+                        Log.i(TAG, "handleMessage: "+TokenUtil.getToken(MainActivity.this));
+                        Log.i(TAG, "handleMessage: "+cmtJson);
                         List<CmtNotifyItem> cmtNotifyItems = gson.fromJson(cmtJson, new TypeToken<List<CmtNotifyItem>>(){}.getType());
                         List<StarNotifyItem> starNotifyItems = gson.fromJson(starJson, new TypeToken<List<StarNotifyItem>>(){}.getType());
                         Log.i(TAG, "handleMessage: cmtSize="+cmtNotifyItems.size());
@@ -123,8 +125,8 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationB
                         DataSupport.saveAll(starNotifyItems);
                         SharedPreferences sharedPreferences = getSharedPreferences("notify", Activity.MODE_PRIVATE);
                         SharedPreferences.Editor editor = sharedPreferences.edit();
-                        editor.putString("cmt", String.valueOf(cmtNotifyItems.size()));
-                        editor.putString("star", String.valueOf(starNotifyItems.size()));
+                        editor.putInt("cmt", cmtNotifyItems.size());
+                        editor.putInt("star", starNotifyItems.size());
                         editor.apply();
 
                         List<CmtNotifyItem> cmtNoRead = DataSupport.where("commentRead = ?", "0").find(CmtNotifyItem.class);

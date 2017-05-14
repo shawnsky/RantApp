@@ -11,7 +11,7 @@
 
     <!--通用-->
     <string name="ip_server">http://120.24.92.198:8080/rant/</string>
-    <string name="localhost">http://10.0.2.2:8080/</string>
+    <string name="i_server">http://10.0.2.2:8080/</string>
     <string name="network_error">网络请求失败</string>
     <string name="http_error">服务器开个小差😅</string>
     <string name="wait_title">稍等</string>

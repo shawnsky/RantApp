@@ -81,6 +81,12 @@ public class RantActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        getData();
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rant);
@@ -133,6 +139,8 @@ public class RantActivity extends AppCompatActivity implements View.OnClickListe
         getData();
 
     }
+
+
 
     private void getData(){
         mClient = new OkHttpClient();
@@ -218,6 +226,8 @@ public class RantActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.activity_rant_user_into_rl_clickable:
                 break;
             case R.id.activity_rant_btn_submit:
+                Intent i = CommentActivity.newIntent(this, rantId);
+                startActivity(i);
                 break;
             case R.id.activity_rant_share_wechat:
                 break;
@@ -279,4 +289,6 @@ public class RantActivity extends AppCompatActivity implements View.OnClickListe
         }
 
     }
+
+
 }

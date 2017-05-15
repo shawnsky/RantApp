@@ -78,6 +78,13 @@
     <string name="post_status_hidden">匿名</string>
     <string name="post_status_public">公开</string>
 
+    <!--评论界面-->
+    <string name="comment_title">回复</string>
+    <string name="comment_content_hint">这里输入评论内容</string>
+    <string name="comment_not_null">发布内容不能为空</string>
+    <string name="comment_button">发送</string>
+    <string name="comment_error_post_failed">发送失败</string>
+
 
     <!--通知界面-->
     <string name="notify_cmt_cmt_head">回复我:</string>

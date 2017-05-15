@@ -37,6 +37,11 @@
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         </activity>
 
+        <activity android:name=".CommentActivity"
+                  android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+        </activity>
+
+
         <service
             android:name=".service.PullService"
             android:enabled="true"

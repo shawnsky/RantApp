@@ -5,6 +5,7 @@ import android.content.Intent;
 
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.net.TrafficStats;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.FragmentActivity;
@@ -48,6 +49,7 @@ import okhttp3.Response;
 public class MainActivity extends AppCompatActivity implements BottomNavigationBar.OnTabSelectedListener{
     private static final String TAG = "MainActivity";
     private static final int MSG_GET_DATA = 1;
+    private static final int MSG_NETWORK_ERROR = 2;
     private boolean gotCMT = false;
     private boolean gotStar = false;
     private HotFragment mHotFragment;
@@ -104,7 +106,6 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationB
         mBar.setTabSelectedListener(this);
 
 
-
         mHandler = new Handler(){
             @Override
             public void handleMessage(Message msg) {
@@ -129,6 +130,9 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationB
                         List<StarNotifyItem> starNoRead = DataSupport.where("starRead = ?", "0").find(StarNotifyItem.class);
                         notifyBadgeItem.setText(String.valueOf(cmtNoRead.size()+starNoRead.size()));
 
+                        break;
+                    case MSG_NETWORK_ERROR:
+                        mTimer.cancel();
                         break;
                 }
             }
@@ -169,12 +173,14 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationB
                 }
 
                 transaction.replace(R.id.activity_main_container,mNewFragment);
+
                 break;
             case 1:
                 if(mHotFragment==null){
                     mHotFragment = HotFragment.newInstance("最热");
                 }
                 transaction.replace(R.id.activity_main_container,mHotFragment);
+
                 break;
             case 2:
                 if(mNotifyFragment==null){
@@ -188,6 +194,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationB
                     mMoreFragment = MoreFragment.newInstance("更多");
                 }
                 transaction.replace(R.id.activity_main_container,mMoreFragment);
+               
                 break;
             default:
                 break;
@@ -206,6 +213,8 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationB
     }
 
 
+
+
     //启动获取通知
     private void getData(){
         String ip = getResources().getString(R.string.ip_server);
@@ -216,7 +225,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationB
         mClient.newCall(cmtRequest).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                // TODO: 2017/5/11
+                mHandler.sendEmptyMessage(MSG_NETWORK_ERROR);
             }
 
             @Override
@@ -233,7 +242,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationB
         mClient.newCall(starRequest).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                // TODO: 2017/5/11
+                mHandler.sendEmptyMessage(MSG_NETWORK_ERROR);
             }
 
             @Override

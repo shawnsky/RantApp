@@ -58,6 +58,13 @@
 
     <!--更多界面-->
     <string name="more_title">更多</string>
+    <string name="more_below_name">查看/编辑个人资料</string>
+    <string name="more_rants">我发布的Rants</string>
+    <string name="more_cmts">我的评论</string>
+    <string name="more_ups">我赞过的</string>
+    <string name="more_downs">我踩过的</string>
+    <string name="more_about">关于我们</string>
+    <string name="more_logout">更换账号 / 退出</string>
 
 
     <!--RantDetail界面-->
@@ -91,4 +98,6 @@
     <string name="notify_cmt_rant_head">我的Rant:</string>
     <string name="notify_star_flag_up">赞了你的Rant！</string>
     <string name="notify_star_flag_down">朝你扔了鸡蛋！</string>
+
+
 </resources>

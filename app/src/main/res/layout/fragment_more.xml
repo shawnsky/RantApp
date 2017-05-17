@@ -14,31 +14,206 @@
         app:contentInsetStart="0dp">
 
         <TextView
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:text="@string/more_title"
             android:textColor="@color/white"
-            android:gravity="center"
+            android:layout_gravity="center"
             android:textSize="25sp"/>
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_gravity="end"
+            android:src="@drawable/ic_more_notify"
+            />
 
     </android.support.v7.widget.Toolbar>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white">
+        android:orientation="vertical"
+        android:background="@color/gray">
 
-        <Button
-            android:id="@+id/fragment_more_btn_logout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="logout"/>
+        <!--个人信息-->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_marginBottom="12dp"
+            android:background="@color/white">
+            <ImageView
+                android:id="@+id/fragment_more_avatar"
+                android:layout_width="72dp"
+                android:layout_height="72dp"
+                android:layout_marginStart="16dp"
+                android:layout_centerVertical="true"
+                tools:background="@color/gray"/>
+            <TextView
+                android:id="@+id/fragment_more_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@id/fragment_more_avatar"
+                tools:text="大鼻子若风"
+                android:textColor="@color/colorPrimary"
+                android:paddingTop="30dp"
+                android:layout_marginStart="16dp"
+                android:textSize="20sp"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/fragment_more_name"
+                android:layout_toEndOf="@id/fragment_more_avatar"
+                android:layout_marginStart="16dp"
+                android:text="@string/more_below_name"
+                android:textColor="@color/colorPrimary"/>
+        </RelativeLayout>
 
-        <Button
-            android:id="@+id/fragment_more_btn_db"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="createDatabase"/>
+        <!--我的Rant-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginBottom="4dp"
+            android:background="@color/white">
+            <ImageView
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/ic_more_rant"
+                android:tint="@color/colorPrimary"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="@string/more_rants"
+                android:textColor="@color/colorPrimary"
+                android:textSize="18sp"/>
+
+
+        </LinearLayout>
+        <!--我的评论-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginBottom="4dp"
+            android:background="@color/white">
+            <ImageView
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_marginStart="13dp"
+                android:layout_marginEnd="13dp"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/ic_more_cmt"
+                android:tint="@color/colorPrimary"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="@string/more_cmts"
+                android:textColor="@color/colorPrimary"
+                android:textSize="18sp"/>
+
+
+        </LinearLayout>
+        <!--我赞过的-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginBottom="4dp"
+            android:background="@color/white">
+            <ImageView
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_marginStart="13dp"
+                android:layout_marginEnd="13dp"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/ic_more_up"
+                android:tint="@color/colorPrimary"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="@string/more_ups"
+                android:textColor="@color/colorPrimary"
+                android:textSize="18sp"/>
+
+
+        </LinearLayout>
+        <!--我踩过的-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginBottom="8dp"
+            android:background="@color/white">
+            <ImageView
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_marginStart="13dp"
+                android:layout_marginEnd="13dp"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/ic_more_down"
+                android:tint="@color/colorPrimary"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="@string/more_downs"
+                android:textColor="@color/colorPrimary"
+                android:textSize="18sp"/>
+
+
+        </LinearLayout>
+
+        <!--关于-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginBottom="4dp"
+            android:background="@color/white">
+            <ImageView
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_marginStart="13dp"
+                android:layout_marginEnd="13dp"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/ic_more_about"
+                android:tint="@color/colorPrimary"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="@string/more_about"
+                android:textColor="@color/colorPrimary"
+                android:textSize="18sp"/>
+
+
+        </LinearLayout>
+
+        <android.support.v7.widget.CardView
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:layout_width="200dp"
+            android:layout_height="40dp"
+            app:cardCornerRadius="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="8dp">
+
+            <Button
+                android:id="@+id/fragment_login_btn_submit"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="@string/more_logout"
+                android:textStyle="bold"
+                android:textSize="20sp"
+                android:textColor="@color/white"
+                android:background="@color/colorAccent"/>
+        </android.support.v7.widget.CardView>
+
+
+
 
     </LinearLayout>
 

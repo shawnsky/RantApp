@@ -5,6 +5,9 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -12,13 +15,20 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.squareup.picasso.Picasso;
 import com.xt.android.rant.LauncherActivity;
 import com.xt.android.rant.MainActivity;
 import com.xt.android.rant.R;
+import com.xt.android.rant.utils.TokenUtil;
 import com.xt.android.rant.wrapper.CmtNotifyItem;
 import com.xt.android.rant.wrapper.RantItem;
 import com.xt.android.rant.wrapper.StarNotifyItem;
+import com.xt.android.rant.wrapper.User;
 
 import org.litepal.crud.DataSupport;
 import org.litepal.tablemanager.Connector;
@@ -37,11 +47,16 @@ import okhttp3.Response;
  * A simple {@link Fragment} subclass.
  */
 public class MoreFragment extends Fragment {
+    private static final int MSG_SUCCESS = 1;
+    private static final int MSG_FAILED = 0;
+
 
     private Toolbar mToolbar;
-    private Button mLogoutButton;
     private OkHttpClient mClient;
-    private Button mDbButton;
+    private ImageView avatar;
+    private TextView nameTextView;
+    private Handler mHandler;
+    private String json;
 
 
     public static MoreFragment newInstance(String param1) {
@@ -57,6 +72,7 @@ public class MoreFragment extends Fragment {
     }
 
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -65,27 +81,31 @@ public class MoreFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_more, container, false);
 
         mToolbar = (Toolbar) view.findViewById(R.id.fragment_more_toolbar);
-        AppCompatActivity activity = (AppCompatActivity) getActivity();
-        activity.getSupportActionBar().setDisplayShowTitleEnabled(false);
+        final AppCompatActivity activity = (AppCompatActivity) getActivity();
         activity.setSupportActionBar(mToolbar);
+        activity.getSupportActionBar().setDisplayShowTitleEnabled(false);
+        avatar = (ImageView)view.findViewById(R.id.fragment_more_avatar);
+        nameTextView = (TextView)view.findViewById(R.id.fragment_more_name);
 
-        mLogoutButton = (Button) view.findViewById(R.id.fragment_more_btn_logout);
-        mLogoutButton.setOnClickListener(new View.OnClickListener() {
+        getData();
+
+        mHandler = new Handler(){
             @Override
-            public void onClick(View view) {
-                logout();
+            public void handleMessage(Message msg) {
+                switch(msg.what){
+                    case MSG_SUCCESS:
+                        Gson gson = new Gson();
+                        User user = gson.fromJson(json, User.class);
+                        Picasso.with(getActivity()).load(user.getUserAvatar()).into(avatar);
+                        nameTextView.setText(user.getUserName());
+                        break;
+                    case MSG_FAILED:
+                        Snackbar.make(avatar,R.string.network_error,Snackbar.LENGTH_SHORT).show();
+                        break;
+                }
             }
-        });
-        mDbButton = (Button) view.findViewById(R.id.fragment_more_btn_db);
-        mDbButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                DataSupport.deleteAll(StarNotifyItem.class);
-                DataSupport.deleteAll(CmtNotifyItem.class);
-                DataSupport.deleteAll(RantItem.class);
-                //Connector.getDatabase();
-            }
-        });
+        };
+
 
 
         return view;
@@ -127,6 +147,29 @@ public class MoreFragment extends Fragment {
             });
 
         }
+    }
+
+    private void getData(){
+        String ip = getActivity().getResources().getString(R.string.ip_server);
+        mClient = new OkHttpClient();
+        Request request = new Request.Builder()
+                .url(ip+"api/userInfo.action?token="+ TokenUtil.getToken(getActivity()))
+                .build();
+        Call call = mClient.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                mHandler.sendEmptyMessage(MSG_FAILED);
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                json = response.body().string();
+                mHandler.sendEmptyMessage(MSG_SUCCESS);
+
+            }
+        });
+
     }
 
 

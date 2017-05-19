@@ -234,6 +234,13 @@ public class RantActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.activity_rant_share_quan:
                 break;
             case R.id.activity_rant_share:
+                Intent i=new Intent(Intent.ACTION_SEND);
+                i.setType("text/plain");
+                i.putExtra(Intent.EXTRA_TEXT,mDetailItem.getRantContent());
+                String server = getResources().getString(R.string.ip_server);
+                i.putExtra(Intent.EXTRA_SUBJECT,server+"rant/rant.action?rantId="+mDetailItem.getRantId());
+                i=Intent.createChooser(i,getString(R.string.send_report));
+                startActivity(i);
                 break;
 
         }

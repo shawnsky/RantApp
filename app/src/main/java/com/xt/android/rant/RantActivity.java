@@ -226,8 +226,8 @@ public class RantActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.activity_rant_user_into_rl_clickable:
                 break;
             case R.id.activity_rant_btn_submit:
-                Intent i = CommentActivity.newIntent(this, rantId);
-                startActivity(i);
+                Intent intent = CommentActivity.newIntent(this, rantId);
+                startActivity(intent);
                 break;
             case R.id.activity_rant_share_wechat:
                 break;

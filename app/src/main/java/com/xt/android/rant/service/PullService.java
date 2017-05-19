@@ -1,5 +1,6 @@
 package com.xt.android.rant.service;
 
+import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -13,6 +14,7 @@ import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 import com.xt.android.rant.MainActivity;
 import com.xt.android.rant.R;
@@ -38,7 +40,8 @@ public class PullService extends Service {
     private static final String TAG = "PullService";
     private NotificationManager manager;
     private MessageThread messageThread;
-    String ip = LitePalApplication.getContext().getResources().getString(R.string.ip_server);
+
+    private String ip = LitePalApplication.getContext().getResources().getString(R.string.ip_server);
 
     public PullService() {
     }
@@ -52,12 +55,13 @@ public class PullService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        Log.i(TAG, "onCreate: ");
+        Log.i(TAG, "PullService onCreate");
+
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.i(TAG, "onStartCommand: ");
+        Log.i(TAG, "PullService onStartCommand");
         manager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
         messageThread = new MessageThread();
         messageThread.isRunning = true;
@@ -67,23 +71,31 @@ public class PullService extends Service {
     }
 
     class MessageThread extends Thread {
-
-        public boolean isRunning = true;
-
+        boolean  isRunning;
         Gson gson = new Gson();
 
         public void run() {
             while (isRunning) {
                 try {
-                    // 间隔时间半小时
-                    //Thread.sleep(1000*60*30);
+                    Log.i(TAG, "PullService running...");
                     Thread.sleep(1000*5);//5s
 
                     String cmtJson = download(ip+"api/getCmtNotify.action?token="+TokenUtil.getToken(LitePalApplication.getContext()));
                     String starJson = download(ip+"api/getStarNotify.action?token="+TokenUtil.getToken(LitePalApplication.getContext()));
 
+                    //用户登出，调用stopService，虽然onDestroy，但是线程在停止之前任务可能没有结束，而此时token是""所以会出现解析错误
+                    SharedPreferences sharedPreferences = LitePalApplication.getContext().getSharedPreferences("token", Activity.MODE_PRIVATE);
+                    String token = sharedPreferences.getString("token","");
+                    if(token.equals("")){
+                        Log.i(TAG, "json parse failed!");
+                        continue;
+                    }
+
+
                     List<CmtNotifyItem> cmtNotifyItems = gson.fromJson(cmtJson, new TypeToken<List<CmtNotifyItem>>(){}.getType());
                     List<StarNotifyItem> starNotifyItems = gson.fromJson(starJson, new TypeToken<List<StarNotifyItem>>(){}.getType());
+
+
                   
 
 
@@ -199,6 +211,6 @@ public class PullService extends Service {
     public void onDestroy() {
         super.onDestroy();
         messageThread.isRunning = false;
-        Log.i(TAG, "onDestroy: ");
+        Log.i(TAG, "PullService Destroy");
     }
 }

@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                                 xmlns:tools="http://schemas.android.com/tools"
+                                                 android:layout_width="match_parent"
+                                                 android:layout_height="match_parent"
+                                                 xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/white">
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/activity_profile_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimary"
+            app:contentInsetStart="0dp"
+            app:layout_scrollFlags="scroll|enterAlways|snap">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="@string/profile_title"
+                android:textColor="@color/white"
+                android:layout_gravity="center"
+                android:textSize="25sp"/>
+            <android.support.v7.widget.CardView
+                android:layout_width="60dp"
+                android:layout_height="35dp"
+                android:layout_marginEnd="16dp"
+                android:layout_gravity="end"
+                app:cardCornerRadius="12dp">
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/colorAccent"
+                    android:text="@string/profile_action"
+                    android:textSize="18sp"
+                    android:textStyle="bold"/>
+            </android.support.v7.widget.CardView>
+
+        </android.support.v7.widget.Toolbar>
+
+
+
+    </android.support.design.widget.AppBarLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        <ImageView
+            android:id="@+id/activity_profile_top_bg"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:background="@drawable/profilebg"
+            android:scaleType="center">
+        </ImageView>
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/activity_activity_profile_cv"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_marginTop="100dp"
+            android:layout_centerHorizontal="true"
+            app:cardCornerRadius="12dp">
+            <ImageView
+                android:id="@+id/activity_profile_avatar"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/colorAccent"/>
+        </android.support.v7.widget.CardView>
+
+        <TextView
+            android:id="@+id/activity_profile_name"
+            android:layout_below="@id/activity_activity_profile_cv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="大鼻子若风"
+            android:textSize="30sp"
+            android:textColor="@color/colorPrimary"
+            android:layout_centerHorizontal="true"
+            />
+
+        <LinearLayout
+            android:id="@+id/activity_profile_bar"
+            android:layout_below="@id/activity_profile_name"
+            android:layout_width="match_parent"
+            android:orientation="horizontal"
+            android:background="@color/white"
+            android:layout_height="wrap_content">
+
+        </LinearLayout>
+
+
+    </RelativeLayout>
+
+
+
+
+
+
+    <LinearLayout
+
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_user"/>
+
+    </LinearLayout>
+
+
+
+
+</android.support.design.widget.CoordinatorLayout>

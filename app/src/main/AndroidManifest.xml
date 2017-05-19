@@ -48,8 +48,12 @@
             android:exported="true">
         </service>
 
-        <activity android:name=".ManagerActivity"
-                  android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+        <activity
+            android:name=".ManagerActivity"
+            android:theme="@style/myAppCompatNoActionBar">
+        </activity>
+        <activity android:name=".ProfileActivity"
+                  android:theme="@style/myAppCompatNoActionBar">
         </activity>
     </application>
 

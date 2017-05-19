@@ -100,5 +100,9 @@
     <string name="notify_star_flag_up">赞了你的Rant！</string>
     <string name="notify_star_flag_down">朝你扔了鸡蛋！</string>
 
+    <!--个人主页-->
+    <string name="profile_title">个人主页</string>
+    <string name="profile_action">编辑</string>
+
 
 </resources>

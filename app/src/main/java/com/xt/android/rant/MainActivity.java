@@ -106,6 +106,9 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationB
         mBar.setTabSelectedListener(this);
 
 
+
+
+
         mHandler = new Handler(){
             @Override
             public void handleMessage(Message msg) {
@@ -125,10 +128,8 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationB
                         DataSupport.saveAll(cmtNotifyItems);
                         DataSupport.saveAll(starNotifyItems);
 
+                        updateBar();
 
-                        List<CmtNotifyItem> cmtNoRead = DataSupport.where("commentRead = ?", "0").find(CmtNotifyItem.class);
-                        List<StarNotifyItem> starNoRead = DataSupport.where("starRead = ?", "0").find(StarNotifyItem.class);
-                        notifyBadgeItem.setText(String.valueOf(cmtNoRead.size()+starNoRead.size()));
 
                         break;
                     case MSG_NETWORK_ERROR:
@@ -140,6 +141,20 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationB
 
         getData();
     }
+
+    private void updateBar() {
+        List<CmtNotifyItem> cmtNoRead = DataSupport.where("commentRead = ?", "0").find(CmtNotifyItem.class);
+        List<StarNotifyItem> starNoRead = DataSupport.where("starRead = ?", "0").find(StarNotifyItem.class);
+        int cnt = cmtNoRead.size()+starNoRead.size();
+        if(cnt!=0){
+            notifyBadgeItem.setText(String.valueOf(cnt));
+        }
+        else{
+            notifyBadgeItem.hide();
+        }
+    }
+
+
 
 
     private void setDefaultFragment() {
@@ -194,7 +209,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationB
                     mMoreFragment = MoreFragment.newInstance("更多");
                 }
                 transaction.replace(R.id.activity_main_container,mMoreFragment);
-               
+
                 break;
             default:
                 break;
@@ -204,6 +219,9 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationB
 
     @Override
     public void onTabUnselected(int position) {
+        if(position==2) {
+            updateBar();
+        }
 
     }
 
@@ -253,4 +271,9 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationB
         });
 
     }
+
+
+
+
+
 }

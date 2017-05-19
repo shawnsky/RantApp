@@ -52,6 +52,10 @@ public class NotifyCmtAdapter extends RecyclerView.Adapter<NotifyCmtAdapter.View
     public void onBindViewHolder(ViewHolder holder, int position) {
         CmtNotifyItem cmtNotifyItem = mCmtNotifyItems.get(position);
         holder.bind(cmtNotifyItem);
+
+        if(cmtNotifyItem.getCommentRead()==1){
+            holder.mll.setBackgroundColor(MainActivity.sMainActivity.getResources().getColor(R.color.garyLightLight));
+        }
     }
 
     @Override

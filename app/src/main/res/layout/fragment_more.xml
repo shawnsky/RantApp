@@ -66,15 +66,17 @@
                 android:layout_below="@id/fragment_more_name"
                 android:layout_toEndOf="@id/fragment_more_avatar"
                 android:layout_marginStart="16dp"
+                android:alpha="0.54"
                 android:text="@string/more_below_name"
                 android:textColor="@color/colorPrimary"/>
         </RelativeLayout>
 
         <!--我的Rant-->
         <LinearLayout
+            android:id="@+id/fragment_more_ll_1"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:layout_marginBottom="4dp"
+            android:layout_marginBottom="2dp"
             android:background="@color/white">
             <ImageView
                 android:layout_width="35dp"
@@ -90,15 +92,16 @@
                 android:layout_gravity="center_vertical"
                 android:text="@string/more_rants"
                 android:textColor="@color/colorPrimary"
-                android:textSize="18sp"/>
+                android:textSize="15sp"/>
 
 
         </LinearLayout>
         <!--我的评论-->
         <LinearLayout
+            android:id="@+id/fragment_more_ll_2"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:layout_marginBottom="4dp"
+            android:layout_marginBottom="2dp"
             android:background="@color/white">
             <ImageView
                 android:layout_width="25dp"
@@ -114,15 +117,16 @@
                 android:layout_gravity="center_vertical"
                 android:text="@string/more_cmts"
                 android:textColor="@color/colorPrimary"
-                android:textSize="18sp"/>
+                android:textSize="15sp"/>
 
 
         </LinearLayout>
         <!--我赞过的-->
         <LinearLayout
+            android:id="@+id/fragment_more_ll_3"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:layout_marginBottom="4dp"
+            android:layout_marginBottom="2dp"
             android:background="@color/white">
             <ImageView
                 android:layout_width="25dp"
@@ -138,15 +142,16 @@
                 android:layout_gravity="center_vertical"
                 android:text="@string/more_ups"
                 android:textColor="@color/colorPrimary"
-                android:textSize="18sp"/>
+                android:textSize="15sp"/>
 
 
         </LinearLayout>
         <!--我踩过的-->
         <LinearLayout
+            android:id="@+id/fragment_more_ll_4"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:layout_marginBottom="8dp"
+            android:layout_marginBottom="12dp"
             android:background="@color/white">
             <ImageView
                 android:layout_width="25dp"
@@ -162,13 +167,14 @@
                 android:layout_gravity="center_vertical"
                 android:text="@string/more_downs"
                 android:textColor="@color/colorPrimary"
-                android:textSize="18sp"/>
+                android:textSize="15sp"/>
 
 
         </LinearLayout>
 
         <!--关于-->
         <LinearLayout
+            android:id="@+id/fragment_more_ll_5"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_marginBottom="4dp"
@@ -187,7 +193,7 @@
                 android:layout_gravity="center_vertical"
                 android:text="@string/more_about"
                 android:textColor="@color/colorPrimary"
-                android:textSize="18sp"/>
+                android:textSize="15sp"/>
 
 
         </LinearLayout>

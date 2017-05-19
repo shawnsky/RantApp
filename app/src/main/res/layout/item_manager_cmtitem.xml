@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:id="@+id/item_manager_cmt_ll"
+              android:orientation="horizontal"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/white">
+    <ImageView
+        android:id="@+id/item_manager_cmt_iv_avatar"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        tools:background="@color/gray"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp">
+        <TextView
+            android:id="@+id/item_manager_cmt_tv_name"
+            android:layout_marginTop="16dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorPrimary"
+            android:textStyle="bold"
+            tools:text="7月Crystal"/>
+
+        <TextView
+            android:id="@+id/item_manager_cmt_tv_comment_content"
+            android:layout_marginTop="8dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/item_manager_cmt_tv_name"
+            android:textColor="@color/black"
+            android:alpha="0.87"
+            tools:text="回复我: [爱心][爱心]."/>
+
+        <TextView
+            android:id="@+id/item_manager_cmt_tv_action"
+            android:layout_marginTop="8dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:paddingTop="8dp"
+            android:layout_alignParentEnd="true"
+            android:textColor="@color/colorAccent"
+            android:textStyle="bold"
+            android:alpha="0.87"
+            tools:text="删除"/>
+
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="16dp"
+            android:padding="8dp"
+            android:layout_below="@id/item_manager_cmt_tv_comment_content"
+            android:background="@color/garyLight">
+
+            <TextView
+                android:id="@+id/item_manager_cmt_tv_rant_content"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:textColor="@color/colorPrimaryDark"
+                android:alpha="0.87"
+                tools:text="现在的Tiesto还是那个王者，我的电音启蒙。现在更喜欢Armin一些了。"/>
+
+        </FrameLayout>
+
+
+    </RelativeLayout>
+
+</LinearLayout>

@@ -22,6 +22,7 @@ import com.xt.android.rant.wrapper.CmtNotifyItem;
 import com.xt.android.rant.wrapper.StarNotifyItem;
 
 
+import org.litepal.LitePalApplication;
 import org.litepal.crud.DataSupport;
 
 import java.util.HashSet;
@@ -37,7 +38,7 @@ public class PullService extends Service {
     private static final String TAG = "PullService";
     private NotificationManager manager;
     private MessageThread messageThread;
-    String ip = MainActivity.sMainActivity.getResources().getString(R.string.ip_server);
+    String ip = LitePalApplication.getContext().getResources().getString(R.string.ip_server);
 
     public PullService() {
     }
@@ -78,8 +79,8 @@ public class PullService extends Service {
                     //Thread.sleep(1000*60*30);
                     Thread.sleep(1000*5);//5s
 
-                    String cmtJson = download(ip+"api/getCmtNotify.action?token="+TokenUtil.getToken(MainActivity.sMainActivity));
-                    String starJson = download(ip+"api/getStarNotify.action?token="+TokenUtil.getToken(MainActivity.sMainActivity));
+                    String cmtJson = download(ip+"api/getCmtNotify.action?token="+TokenUtil.getToken(LitePalApplication.getContext()));
+                    String starJson = download(ip+"api/getStarNotify.action?token="+TokenUtil.getToken(LitePalApplication.getContext()));
 
                     List<CmtNotifyItem> cmtNotifyItems = gson.fromJson(cmtJson, new TypeToken<List<CmtNotifyItem>>(){}.getType());
                     List<StarNotifyItem> starNotifyItems = gson.fromJson(starJson, new TypeToken<List<StarNotifyItem>>(){}.getType());
@@ -161,14 +162,14 @@ public class PullService extends Service {
     }
 
     private void pushCmtNotify(CmtNotifyItem cmtNotifyItem){
-        Intent mainIntent = RantActivity.newIntent(MainActivity.sMainActivity, cmtNotifyItem.getRantId());
+        Intent mainIntent = RantActivity.newIntent(LitePalApplication.getContext(), cmtNotifyItem.getRantId());
         PendingIntent pi = PendingIntent.getActivity(this, 0, mainIntent, 0);
         Notification notification = new NotificationCompat.Builder(this)
                 .setContentTitle("Rant社区")
                 .setContentText(cmtNotifyItem.getUserName()+"回复你说: "+cmtNotifyItem.getCommentContent())
                 .setWhen(System.currentTimeMillis())
                 .setSmallIcon(R.drawable.ic_user)
-                .setLargeIcon(BitmapFactory.decodeResource(MainActivity.sMainActivity.getResources(),R.mipmap.ic_launcher))
+                .setLargeIcon(BitmapFactory.decodeResource(LitePalApplication.getContext().getResources(),R.mipmap.ic_launcher))
                 .setContentIntent(pi)
                 .setDefaults(NotificationCompat.DEFAULT_ALL)
                 .setAutoCancel(true)
@@ -177,14 +178,14 @@ public class PullService extends Service {
     }
 
     private void pushStarNotify(StarNotifyItem starNotifyItem){
-        Intent mainIntent = RantActivity.newIntent(MainActivity.sMainActivity, starNotifyItem.getRantId());
+        Intent mainIntent = RantActivity.newIntent(LitePalApplication.getContext(), starNotifyItem.getRantId());
         PendingIntent pi = PendingIntent.getActivity(this, 0, mainIntent, 0);
         Notification notification = new NotificationCompat.Builder(this)
                 .setContentTitle("Rant社区")
                 .setContentText(starNotifyItem.getStarValue()==1?starNotifyItem.getUserName()+"赞了你，点击这里查看":starNotifyItem.getUserName()+"朝你扔了鸡蛋，点击这里查看")
                 .setWhen(System.currentTimeMillis())
                 .setSmallIcon(R.drawable.ic_user)
-                .setLargeIcon(BitmapFactory.decodeResource(MainActivity.sMainActivity.getResources(),R.mipmap.ic_launcher))
+                .setLargeIcon(BitmapFactory.decodeResource(LitePalApplication.getContext().getResources(),R.mipmap.ic_launcher))
                 .setContentIntent(pi)
                 .setDefaults(NotificationCompat.DEFAULT_ALL)
                 .setAutoCancel(true)

@@ -33,20 +33,24 @@
             android:name=".RantActivity"
             android:theme="@style/myAppCompatNoActionBar">
         </activity>
-        <activity android:name=".PostActivity"
+        <activity
+            android:name=".PostActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         </activity>
-
-        <activity android:name=".CommentActivity"
-                  android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+        <activity
+            android:name=".CommentActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         </activity>
-
 
         <service
             android:name=".service.PullService"
             android:enabled="true"
             android:exported="true">
         </service>
+
+        <activity android:name=".ManagerActivity"
+                  android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+        </activity>
     </application>
 
 </manifest>

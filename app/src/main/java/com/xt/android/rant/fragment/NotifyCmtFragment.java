@@ -129,4 +129,10 @@ public class NotifyCmtFragment extends Fragment implements SwipeRefreshLayout.On
     public void onRefresh() {
         getData();
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        getData();
+    }
 }

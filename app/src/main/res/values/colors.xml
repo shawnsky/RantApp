@@ -32,7 +32,7 @@
     <color name="normal_btn_bg">#4CB849</color>
     <color name="selected_btn_bg">#0C6609</color>
 
-    <color name="garyLight">#f4f4f6</color>
-    <color name="garyLightLight">#f2f4f5</color>
+    <color name="garyLight">#ededed</color>
+    <color name="garyLightLight">#f5f5f5</color>
 
 </resources>

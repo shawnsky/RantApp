@@ -128,4 +128,9 @@ public class NotifyStarFragment extends Fragment implements SwipeRefreshLayout.O
     public void onRefresh() {
         getData();
     }
+    @Override
+    public void onResume() {
+        super.onResume();
+        getData();
+    }
 }

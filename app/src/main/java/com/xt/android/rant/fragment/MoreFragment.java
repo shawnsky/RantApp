@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
@@ -23,6 +24,7 @@ import com.google.gson.reflect.TypeToken;
 import com.squareup.picasso.Picasso;
 import com.xt.android.rant.LauncherActivity;
 import com.xt.android.rant.MainActivity;
+import com.xt.android.rant.ManagerActivity;
 import com.xt.android.rant.R;
 import com.xt.android.rant.utils.TokenUtil;
 import com.xt.android.rant.wrapper.CmtNotifyItem;
@@ -46,7 +48,7 @@ import okhttp3.Response;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class MoreFragment extends Fragment {
+public class MoreFragment extends Fragment implements View.OnClickListener{
     private static final int MSG_SUCCESS = 1;
     private static final int MSG_FAILED = 0;
 
@@ -57,6 +59,11 @@ public class MoreFragment extends Fragment {
     private TextView nameTextView;
     private Handler mHandler;
     private String json;
+    private LinearLayout mll1;
+    private LinearLayout mll2;
+    private LinearLayout mll3;
+    private LinearLayout mll4;
+    private LinearLayout mll5;
 
 
     public static MoreFragment newInstance(String param1) {
@@ -86,6 +93,16 @@ public class MoreFragment extends Fragment {
         activity.getSupportActionBar().setDisplayShowTitleEnabled(false);
         avatar = (ImageView)view.findViewById(R.id.fragment_more_avatar);
         nameTextView = (TextView)view.findViewById(R.id.fragment_more_name);
+        mll1 = (LinearLayout) view.findViewById(R.id.fragment_more_ll_1);
+        mll2 = (LinearLayout) view.findViewById(R.id.fragment_more_ll_2);
+        mll3 = (LinearLayout) view.findViewById(R.id.fragment_more_ll_3);
+        mll4 = (LinearLayout) view.findViewById(R.id.fragment_more_ll_4);
+        mll5 = (LinearLayout) view.findViewById(R.id.fragment_more_ll_5);
+        mll1.setOnClickListener(this);
+        mll2.setOnClickListener(this);
+        mll3.setOnClickListener(this);
+        mll4.setOnClickListener(this);
+        mll5.setOnClickListener(this);
 
         getData();
 
@@ -180,4 +197,25 @@ public class MoreFragment extends Fragment {
         startActivity(i);
     }
 
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()){
+            case R.id.fragment_more_ll_1:
+                getActivity().startActivity(ManagerActivity.newIntent(getActivity(), 1));
+                break;
+            case R.id.fragment_more_ll_2:
+                getActivity().startActivity(ManagerActivity.newIntent(getActivity(), 2));
+                break;
+            case R.id.fragment_more_ll_3:
+                getActivity().startActivity(ManagerActivity.newIntent(getActivity(), 3));
+                break;
+            case R.id.fragment_more_ll_4:
+                getActivity().startActivity(ManagerActivity.newIntent(getActivity(), 4));
+                break;
+            case R.id.fragment_more_ll_5:
+                break;
+            default:
+                break;
+        }
+    }
 }

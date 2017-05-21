@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 import com.xt.android.rant.MainActivity;
+import com.xt.android.rant.ProfileActivity;
 import com.xt.android.rant.R;
 import com.xt.android.rant.RantActivity;
 import com.xt.android.rant.wrapper.CmtNotifyItem;
@@ -54,6 +55,13 @@ public class NotifyStarAdapter extends RecyclerView.Adapter<NotifyStarAdapter.Vi
         if(starNotifyItem.getStarRead()==1){
             holder.mRl.setBackgroundColor(MainActivity.sMainActivity.getResources().getColor(R.color.garyLightLight));
         }
+        holder.mName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = ProfileActivity.newIntent(MainActivity.sMainActivity, starNotifyItem.getUserId());
+                MainActivity.sMainActivity.startActivity(intent);
+            }
+        });
     }
 
     @Override

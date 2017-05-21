@@ -72,7 +72,7 @@
     <string name="rant_hidden_user_name">神秘人</string>
     <string name="rant_no_comment">暂无评论</string>
     <string name="rant_post_comment">发表评论</string>
-    <string name="send_report">发送到xxxx</string>
+    <string name="rant_send_report">发送到</string>
 
 
     <!--发布Rant界面-->
@@ -103,6 +103,13 @@
     <!--个人主页-->
     <string name="profile_title">个人主页</string>
     <string name="profile_action">编辑</string>
+    <string name="profile_value_left">声望:</string>
+
+    <!--信息编辑-->
+    <string name="dialog_edit_title">修改信息</string>
+    <string name="dialog_edit_bio">个性签名</string>
+    <string name="dialog_edit_location">地区</string>
+    <string name="dialog_edit_submit">保存</string>
 
 
 </resources>

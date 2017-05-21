@@ -29,6 +29,7 @@ import com.xt.android.rant.utils.SpaceItemDecoration;
 import com.xt.android.rant.utils.TokenUtil;
 import com.xt.android.rant.wrapper.CommentItem;
 import com.xt.android.rant.wrapper.DetailItem;
+import com.xt.android.rant.wrapper.RantItem;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -59,7 +60,6 @@ public class RantActivity extends AppCompatActivity implements View.OnClickListe
     private RecyclerView mCommentsRecyclerView;
     private Toolbar mToolbar;
     private ProgressBar mProgressBar;
-    private LinearLayout mEmptyView;
     private RelativeLayout mUserInfoLayout;
     private ImageView mWeChatShareButton;
     private ImageView mQuanShareButton;
@@ -108,7 +108,6 @@ public class RantActivity extends AppCompatActivity implements View.OnClickListe
         mCommentsRecyclerView.addItemDecoration(new SpaceItemDecoration(1));
         mCommentsRecyclerView.setAdapter(new CommentAdapter(new ArrayList<CommentItem>()));//空列表
         mProgressBar = (ProgressBar)findViewById(R.id.activity_rant_progress_bar);
-        mEmptyView = (LinearLayout)findViewById(R.id.activity_rant_empty_view);
         mUserInfoLayout = (RelativeLayout) findViewById(R.id.activity_rant_user_into_rl_clickable);
         mWeChatShareButton = (ImageView) findViewById(R.id.activity_rant_share_wechat);
         mQuanShareButton = (ImageView) findViewById(R.id.activity_rant_share_quan);
@@ -116,7 +115,6 @@ public class RantActivity extends AppCompatActivity implements View.OnClickListe
         mPostButton = (Button) findViewById(R.id.activity_rant_btn_submit);
 
 
-        mUserInfoLayout.setOnClickListener(this);
         mWeChatShareButton.setOnClickListener(this);
         mQuanShareButton.setOnClickListener(this);
         mShareButton.setOnClickListener(this);
@@ -186,7 +184,11 @@ public class RantActivity extends AppCompatActivity implements View.OnClickListe
         if(mDetailItem.getRantHidden()==1){//匿名
             mNameTextView.setText(R.string.rant_hidden_user_name);
         }
-        else mNameTextView.setText(mDetailItem.getUserName());
+        else{
+            mNameTextView.setText(mDetailItem.getUserName());
+            mUserInfoLayout.setOnClickListener(this);
+        }
+       
         mValueTextView.setText(String.valueOf(mDetailItem.getRantValue()));
         SimpleDateFormat sdf = new SimpleDateFormat("yy/MM/dd hh:mm");
         mDateTextView.setText(sdf.format(mDetailItem.getRantDate()));
@@ -210,12 +212,8 @@ public class RantActivity extends AppCompatActivity implements View.OnClickListe
 
 
         List<CommentItem> commentItems = mDetailItem.getCommentList();
-        if(commentItems==null||commentItems.size()==0){
-            mEmptyView.setVisibility(View.VISIBLE);
-        }
-        else{
-            mCommentsRecyclerView.setAdapter(new CommentAdapter(commentItems));
-        }
+        mCommentsRecyclerView.setAdapter(new CommentAdapter(commentItems));
+
 
         mProgressBar.setVisibility(View.INVISIBLE);
     }
@@ -224,6 +222,8 @@ public class RantActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View view) {
         switch(view.getId()){
             case R.id.activity_rant_user_into_rl_clickable:
+                Intent intent1 = ProfileActivity.newIntent(RantActivity.this, mDetailItem.getUserId());
+                startActivity(intent1);
                 break;
             case R.id.activity_rant_btn_submit:
                 Intent intent = CommentActivity.newIntent(this, rantId);
@@ -239,7 +239,7 @@ public class RantActivity extends AppCompatActivity implements View.OnClickListe
                 i.putExtra(Intent.EXTRA_TEXT,mDetailItem.getRantContent());
                 String server = getResources().getString(R.string.ip_server);
                 i.putExtra(Intent.EXTRA_SUBJECT,server+"rant/rant.action?rantId="+mDetailItem.getRantId());
-                i=Intent.createChooser(i,getString(R.string.send_report));
+                i=Intent.createChooser(i,getString(R.string.rant_send_report));
                 startActivity(i);
                 break;
 

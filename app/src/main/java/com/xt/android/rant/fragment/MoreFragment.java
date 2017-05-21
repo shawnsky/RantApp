@@ -65,6 +65,7 @@ public class MoreFragment extends Fragment implements View.OnClickListener{
     private Handler mHandler;
     private Button logoutButton;
     private String json;
+    private User mUser;
     private LinearLayout mll1;
     private LinearLayout mll2;
     private LinearLayout mll3;
@@ -124,9 +125,9 @@ public class MoreFragment extends Fragment implements View.OnClickListener{
                     case MSG_SUCCESS:
                         Gson gson = new Gson();
                         Log.i(TAG, "handleMessage: "+MSG_SUCCESS);
-                        User user = gson.fromJson(json, User.class);
-                        Picasso.with(getActivity()).load(user.getUserAvatar()).into(avatar);
-                        nameTextView.setText(user.getUserName());
+                        mUser = gson.fromJson(json, User.class);
+                        Picasso.with(getActivity()).load(mUser.getUserAvatar()).into(avatar);
+                        nameTextView.setText(mUser.getUserName());
                         break;
                     case MSG_FAILED:
                         Snackbar.make(avatar,R.string.network_error,Snackbar.LENGTH_SHORT).show();
@@ -233,7 +234,7 @@ public class MoreFragment extends Fragment implements View.OnClickListener{
                 logout();
                 break;
             case R.id.fragment_more_rl_user_info:
-                Intent intent = new Intent(getActivity(), ProfileActivity.class);
+                Intent intent = ProfileActivity.newIntent(getActivity(), mUser.getUserId());
                 startActivity(intent);
                 break;
             default:

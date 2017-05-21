@@ -1,5 +1,6 @@
 package com.xt.android.rant.adapter;
 
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,6 +12,7 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 import com.xt.android.rant.MainActivity;
+import com.xt.android.rant.ProfileActivity;
 import com.xt.android.rant.R;
 import com.xt.android.rant.wrapper.CommentItem;
 
@@ -37,7 +39,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        CommentItem commentItem = mCommentItemList.get(position);
+        final CommentItem commentItem = mCommentItemList.get(position);
         holder.bindComment(commentItem);
         holder.floorTextView.setText(String.valueOf(position+1)+"F");
         if (position==mCommentItemList.size()-1){//最后一项
@@ -47,6 +49,13 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
         else{
             holder.frameLayout.setVisibility(View.GONE);
         }
+        holder.nameTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = ProfileActivity.newIntent(MainActivity.sMainActivity, commentItem.getUserId());
+                MainActivity.sMainActivity.startActivity(intent);
+            }
+        });
     }
 
     @Override

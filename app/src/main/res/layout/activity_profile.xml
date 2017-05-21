@@ -14,8 +14,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/colorPrimary"
-            app:contentInsetStart="0dp"
-            app:layout_scrollFlags="scroll|enterAlways|snap">
+            app:contentInsetStart="0dp">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -25,12 +24,15 @@
                 android:layout_gravity="center"
                 android:textSize="25sp"/>
             <android.support.v7.widget.CardView
+                android:id="@+id/activity_profile_cv_edit"
+                android:visibility="gone"
                 android:layout_width="60dp"
                 android:layout_height="35dp"
                 android:layout_marginEnd="16dp"
                 android:layout_gravity="end"
                 app:cardCornerRadius="12dp">
                 <Button
+                    android:id="@+id/activity_profile_button_edit"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@color/colorAccent"
@@ -45,75 +47,164 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
-        <ImageView
-            android:id="@+id/activity_profile_top_bg"
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:background="@drawable/profilebg"
-            android:scaleType="center">
-        </ImageView>
 
-        <android.support.v7.widget.CardView
-            android:id="@+id/activity_activity_profile_cv"
-            android:layout_width="150dp"
-            android:layout_height="150dp"
-            android:layout_marginTop="100dp"
-            android:layout_centerHorizontal="true"
-            app:cardCornerRadius="12dp">
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
             <ImageView
-                android:id="@+id/activity_profile_avatar"
+                android:id="@+id/activity_profile_top_bg"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/colorAccent"/>
-        </android.support.v7.widget.CardView>
+                android:layout_height="200dp"
+                android:background="@drawable/profilebg"
+                android:alpha="0.6"
+                android:scaleType="center"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentStart="true">
+            </ImageView>
 
-        <TextView
-            android:id="@+id/activity_profile_name"
-            android:layout_below="@id/activity_activity_profile_cv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="大鼻子若风"
-            android:textSize="30sp"
-            android:textColor="@color/colorPrimary"
-            android:layout_centerHorizontal="true"
-            />
+            <LinearLayout
+                android:background="@color/white"
+                android:id="@+id/activity_activity_profile_cv"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:layout_marginTop="100dp"
+                android:layout_centerHorizontal="true">
+                <ImageView
+                    android:id="@+id/activity_profile_avatar"
+                    android:padding="4dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/white"
+                    tools:src="@color/colorAccent"/>
+            </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/activity_profile_bar"
-            android:layout_below="@id/activity_profile_name"
-            android:layout_width="match_parent"
-            android:orientation="horizontal"
-            android:background="@color/white"
-            android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/activity_profile_name"
+                android:layout_below="@id/activity_activity_profile_cv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                tools:text="大鼻子若风"
+                android:textSize="30sp"
+                android:textColor="@color/colorPrimary"
+                android:layout_centerHorizontal="true"
+                />
 
-        </LinearLayout>
+            <LinearLayout
+                android:id="@+id/activity_profile_bar"
+                android:layout_below="@id/activity_profile_name"
+                android:layout_width="match_parent"
+                android:orientation="vertical"
+                android:background="@color/garyOnWhite"
+                android:layout_height="wrap_content">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="2dp"
+                    android:background="@color/white">
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:layout_gravity="center_vertical"
+                        android:src="@drawable/ic_user"
+                        android:tint="@color/colorPrimary"/>
+                    <TextView
+                        android:id="@+id/activity_profile_bio"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        tools:text="什么也没留下"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="15sp"/>
 
 
-    </RelativeLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginBottom="2dp"
+                    android:background="@color/white">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:layout_gravity="center_vertical"
+                        android:src="@drawable/ic_profile_value"
+                        android:tint="@color/colorPrimary"
+                        android:id="@+id/imageView"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:text="@string/profile_value_left"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="15sp"/>
+
+                    <TextView
+                        android:id="@+id/activity_profile_value"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        tools:text="100"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="15sp"/>
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginBottom="2dp"
+                    android:background="@color/white">
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:layout_gravity="center_vertical"
+                        android:src="@drawable/ic_profile_location"
+                        android:tint="@color/colorPrimary"/>
+
+
+                    <TextView
+                        android:id="@+id/activity_profile_location"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        tools:text="浙江杭州"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="15sp"/>
+
+
+                </LinearLayout>
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/activity_profile_recycler_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
+            </LinearLayout>
 
 
 
 
+        </RelativeLayout>
 
-
-    <LinearLayout
-
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_user"/>
-
-    </LinearLayout>
-
-
+    </ScrollView>
 
 
 </android.support.design.widget.CoordinatorLayout>

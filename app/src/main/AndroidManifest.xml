@@ -3,6 +3,8 @@
           package="com.xt.android.rant">
 
     <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
     <application
         android:name="org.litepal.LitePalApplication"
@@ -55,6 +57,16 @@
         <activity android:name=".ProfileActivity"
                   android:theme="@style/myAppCompatNoActionBar">
         </activity>
+
+        <provider
+            android:authorities="com.xt.android.rant.provider"
+            android:name="android.support.v4.content.FileProvider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths"/>
+        </provider>
     </application>
 
 </manifest>

@@ -110,6 +110,9 @@
     <string name="dialog_edit_bio">个性签名</string>
     <string name="dialog_edit_location">地区</string>
     <string name="dialog_edit_submit">保存</string>
+    <string name="dialog_photo_title">选择照片</string>
+    <string name="dialog_photo_camera">拍照</string>
+    <string name="dialog_photo_album">从相册选择</string>
 
 
 </resources>

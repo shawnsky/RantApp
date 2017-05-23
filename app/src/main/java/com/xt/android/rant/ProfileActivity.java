@@ -22,6 +22,7 @@ import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 import com.xt.android.rant.adapter.NewAdapter;
 import com.xt.android.rant.fragment.EditInfoFragment;
+import com.xt.android.rant.fragment.SelectPhotoFragment;
 import com.xt.android.rant.utils.TokenUtil;
 import com.xt.android.rant.wrapper.RantItem;
 import com.xt.android.rant.wrapper.UserItem;
@@ -42,6 +43,7 @@ import okhttp3.Response;
 public class ProfileActivity extends AppCompatActivity implements View.OnClickListener {
     private static final int MSG_GET_DATA = 1;
     private static final String ARG_EDIT_DIALOG = "arg_edit_dialog";
+    private static final String ARG_PHOTO_DIALOG = "arg_photo_dialog";
     private static final String TAG = "ProfileActivity";
     private static final String EXTRA_USER_ID = "extra_user_id";
     private Toolbar mToolbar;
@@ -107,6 +109,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                     if(mUserItem.isMyself()){
                         mEditCardView.setVisibility(View.VISIBLE);
                         mEditButton.setOnClickListener(ProfileActivity.this);
+                        mAvatarImageView.setOnClickListener(ProfileActivity.this);
                     }
                     //展示柜移除匿名内容
                     Iterator<RantItem> iterator = list.iterator();
@@ -136,12 +139,17 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
 
     @Override
     public void onClick(View view) {
+        FragmentManager fm = getSupportFragmentManager();
         switch (view.getId()){
             case R.id.activity_profile_button_edit:
-                FragmentManager fm = getSupportFragmentManager();
                 EditInfoFragment DialogEdit = new EditInfoFragment();
                 DialogEdit.setInfo(mUserItem.getUserId(), mUserItem.getUserBio(), mUserItem.getUserLocation());
                 DialogEdit.show(fm,ARG_EDIT_DIALOG);
+                break;
+            case R.id.activity_profile_avatar:
+                SelectPhotoFragment DialogSelect = new SelectPhotoFragment();
+                DialogSelect.setInfo(mUserItem.getUserId());
+                DialogSelect.show(fm,ARG_PHOTO_DIALOG);
                 break;
         }
 
@@ -169,4 +177,6 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         });
 
     }
+
+
 }

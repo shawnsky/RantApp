@@ -188,7 +188,7 @@ public class RantActivity extends AppCompatActivity implements View.OnClickListe
             mNameTextView.setText(mDetailItem.getUserName());
             mUserInfoLayout.setOnClickListener(this);
         }
-       
+
         mValueTextView.setText(String.valueOf(mDetailItem.getRantValue()));
         SimpleDateFormat sdf = new SimpleDateFormat("yy/MM/dd hh:mm");
         mDateTextView.setText(sdf.format(mDetailItem.getRantDate()));

@@ -180,13 +180,16 @@ public class RantActivity extends AppCompatActivity implements View.OnClickListe
         Gson gson = new Gson();
         mDetailItem = gson.fromJson(mJson, DetailItem.class);
 
-        Picasso.with(this).load(mDetailItem.getRantAvatar()).into(mAvatarImageView);
+
+
         if(mDetailItem.getRantHidden()==1){//匿名
             mNameTextView.setText(R.string.rant_hidden_user_name);
+            Picasso.with(this).load(mDetailItem.getRantAvatar()).into(mAvatarImageView);
         }
         else{
             mNameTextView.setText(mDetailItem.getUserName());
             mUserInfoLayout.setOnClickListener(this);
+            Picasso.with(this).load(mDetailItem.getUserAvatar()).into(mAvatarImageView);
         }
 
         mValueTextView.setText(String.valueOf(mDetailItem.getRantValue()));

@@ -8,9 +8,13 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
@@ -26,14 +30,33 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.xt.android.rant.R;
+import com.google.gson.Gson;
 
+import com.qiniu.android.common.Zone;
+import com.qiniu.android.http.ResponseInfo;
+
+import com.qiniu.android.storage.Configuration;
+import com.qiniu.android.storage.UpCompletionHandler;
+import com.qiniu.android.storage.UploadManager;
+import com.xt.android.rant.R;
+import com.xt.android.rant.utils.Helper;
+import com.xt.android.rant.utils.TokenUtil;
+
+import org.json.JSONObject;
+
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Date;
+import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.FormBody;
+import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
@@ -46,8 +69,15 @@ public class SelectPhotoFragment extends DialogFragment implements View.OnClickL
     private static final String TAG = "SelectPhotoFragment";
     private static final int TAKE_PHOTO = 1;
     private static final int CHOOSE_PHOTO = 2;
+
+    private static final int MSG_GET_TOKEN = 3;
+    private static final int MSG_UPLOAD_SUCCESS = 4;
+    private String upToken;
     private int userId;
     private Uri imageUri;
+    private String filePath;
+    private String key;
+    private OkHttpClient client;
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -67,33 +97,6 @@ public class SelectPhotoFragment extends DialogFragment implements View.OnClickL
         this.userId = userId;
     }
 
-    private void post(String newBio, String newLocation){
-        String ip = getActivity().getString(R.string.ip_server);
-        OkHttpClient client = new OkHttpClient();
-        RequestBody formBody = new FormBody.Builder()
-                .add("userId", String.valueOf(userId))
-                .add("bio", newBio)
-                .add("location", newLocation)
-                .build();
-
-        Request request = new Request.Builder()
-                .url(ip+"api/editInfo.action")
-                .post(formBody)
-                .build();
-
-        Call call = client.newCall(request);
-        call.enqueue(new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-
-            }
-
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-
-            }
-        });
-    }
 
 
     @Override
@@ -115,6 +118,17 @@ public class SelectPhotoFragment extends DialogFragment implements View.OnClickL
                 else {
                     imageUri = Uri.fromFile(outputImage);
                 }
+
+//                File outputFile = new File(getActivity().getExternalCacheDir(), "rant_image_" + String.valueOf(new Date().getTime()) + ".jpg");//文件初始化
+//                filePath = outputFile.getPath();
+//                try {
+//                    outputFile.createNewFile();//创建文件
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//                ActivityCompat.requestPermissions(getActivity(),
+//                        new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE},
+//                        1);
 
                 //检查权限
                 if(ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA)!= PackageManager.PERMISSION_GRANTED){
@@ -144,19 +158,32 @@ public class SelectPhotoFragment extends DialogFragment implements View.OnClickL
         switch (requestCode){
             case TAKE_PHOTO:
                 if(resultCode == RESULT_OK){
-                    Log.i(TAG, "CameraImage: "+imageUri.getPath());
-                    File file = new File(imageUri.getPath());
-                    Log.i(TAG, "onActivityResult: filepath"+file.getPath());
+//                    Bundle bundle = data.getExtras();
+//                    Bitmap bitmap = (Bitmap) bundle.get("data");
+                    Bitmap bitmap = null;
+                    try {
+                        bitmap = BitmapFactory.decodeStream(getActivity().getContentResolver().openInputStream(imageUri));
+                        Uri uri = Uri.parse(MediaStore.Images.Media.insertImage(getActivity().getContentResolver(), bitmap, null,null));
+
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    }
+
+                    //getQiniuUpToken();
+
                 }
                 break;
             case CHOOSE_PHOTO:
                 if(resultCode == RESULT_OK){
-                    handleImage(data);
+                    handleImage(data.getData());
                 }
         }
     }
 
+
     private void openCamera(){
+//        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+//        startActivityForResult(intent, TAKE_PHOTO);
         Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
         intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
         startActivityForResult(intent, TAKE_PHOTO);
@@ -169,9 +196,8 @@ public class SelectPhotoFragment extends DialogFragment implements View.OnClickL
 
     }
 
-    private void handleImage(Intent data){
+    private void handleImage(Uri uri){
         String imagePath = null;
-        Uri uri = data.getData();
         if(DocumentsContract.isDocumentUri(getActivity(), uri)){
             String docId = DocumentsContract.getDocumentId(uri);
             if("com.android.providers.media.documents".equals(uri.getAuthority())){
@@ -191,7 +217,9 @@ public class SelectPhotoFragment extends DialogFragment implements View.OnClickL
         else if("file".equalsIgnoreCase(uri.getScheme())){
             imagePath = uri.getPath();
         }
-        displayImage(imagePath);
+        filePath = imagePath;
+        Log.i(TAG, "handleImage: Album filepath"+filePath);
+        getQiniuUpToken();
     }
 
     private String getImagePath(Uri uri, String selection){
@@ -207,11 +235,6 @@ public class SelectPhotoFragment extends DialogFragment implements View.OnClickL
         return path;
     }
 
-    private void displayImage(String imagePath){
-        Log.i(TAG, "AlbumImage: "+(imagePath==null?"is null":"not null"));
-        Log.i(TAG, "AlbumImage: "+imagePath);
-        Toast.makeText(getActivity(), imagePath, Toast.LENGTH_LONG).show();
-    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -227,4 +250,111 @@ public class SelectPhotoFragment extends DialogFragment implements View.OnClickL
             default:
         }
     }
+
+    /**
+     * 这里使用七牛云存储用户上传的图片
+     * 流程
+     * 1.得到照片File
+     * 2.请求服务端获取七牛的上传Token
+     * 3.构建一个七牛上传体
+     * 4.执行上传成功回调: 图片地址发送给服务端
+     */
+
+    private void getQiniuUpToken(){
+        String ip = getActivity().getString(R.string.ip_server);
+         client = new OkHttpClient();
+        Request request = new Request.Builder()
+                .url(ip+"api/getQiniuUploadToken.action")
+                .build();
+        Call call = client.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                // TODO: 2017/5/24
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                upToken = String.valueOf(response.body().string());
+                mHandler.sendEmptyMessage(MSG_GET_TOKEN);
+            }
+        });
+    }
+
+    private Handler mHandler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            switch(msg.what){
+                case MSG_GET_TOKEN:
+                    //此时filePath可能为空
+                    uploadAvatar(new File(filePath), upToken);
+                    Log.i(TAG, "handleMessage: upload"+filePath+" "+upToken);
+                    break;
+                case MSG_UPLOAD_SUCCESS:
+                    Log.i(TAG, "handleMessage: image upload success, ready post to server");
+                    changeAvatar();
+                    break;
+                default:
+                    break;
+
+            }
+        }
+    };
+
+    private void uploadAvatar(File file, String token){
+
+        Configuration config = new Configuration.Builder().zone(Zone.zone0).build();
+
+        UploadManager uploadManager = new UploadManager(config);
+        key = String.valueOf(userId)+String.valueOf(new Date().getTime())+".png";
+
+        uploadManager.put(file, key, token, new UpCompletionHandler() {
+                    @Override
+                    public void complete(String key, ResponseInfo info, JSONObject res) {
+                        //res包含hash、key等信息，具体字段取决于上传策略的设置
+                        if(info.isOK())
+                        {
+                            Log.i("qiniu", "Upload Success");
+                            mHandler.sendEmptyMessage(MSG_UPLOAD_SUCCESS);
+                        }
+                        else{
+                            Log.i("qiniu", "Upload Fail");
+                            //如果失败，这里可以把info信息上报自己的服务器，便于后面分析上传错误原因
+                        }
+                        Log.i("qiniu", key + ",\r\n " + info + ",\r\n " + res);
+                    }
+                }, null);
+
+
+
+
+    }
+
+    private void changeAvatar(){
+        String img = "http://oqfusne05.bkt.clouddn.com/"+key+"?imageView2/1/w/300/h/300/format/png/q/75|imageslim";
+        String ip = getActivity().getString(R.string.ip_server);
+        client = new OkHttpClient();
+        RequestBody form = new FormBody.Builder()
+                .add("token", TokenUtil.getToken(getActivity()))
+                .add("userId", String.valueOf(userId))
+                .add("img", img)
+                .build();
+        Request request = new Request.Builder()
+                .post(form)
+                .url(ip+"api/changeAvatar.action")
+                .build();
+        Call call = client.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                // TODO: 2017/5/24
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                Log.i(TAG, "onResponse: update img url to [server] success");
+            }
+        });
+    }
+
 }

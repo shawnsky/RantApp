@@ -39,6 +39,8 @@ import com.qiniu.android.storage.Configuration;
 import com.qiniu.android.storage.UpCompletionHandler;
 import com.qiniu.android.storage.UploadManager;
 import com.xt.android.rant.R;
+import com.xt.android.rant.utils.Bimp;
+import com.xt.android.rant.utils.FileManagerUtils;
 import com.xt.android.rant.utils.Helper;
 import com.xt.android.rant.utils.TokenUtil;
 
@@ -72,10 +74,11 @@ public class SelectPhotoFragment extends DialogFragment implements View.OnClickL
 
     private static final int MSG_GET_TOKEN = 3;
     private static final int MSG_UPLOAD_SUCCESS = 4;
-    private String upToken;
+    private String upToken;//用来保存服务端返回的上传凭证
     private int userId;
-    private Uri imageUri;
-    private String filePath;
+    private Uri photoUri;
+    private String tempPicPath;
+    private String filePath;//用来保存拍照/选择照片 的图片路径
     private String key;
     private OkHttpClient client;
 
@@ -103,33 +106,15 @@ public class SelectPhotoFragment extends DialogFragment implements View.OnClickL
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.fragment_dialog_photo_camera:
-                File outputImage = new File(getActivity().getExternalCacheDir(), "output_image.jpg");
-                try{
-                    if(outputImage.exists()){
-                        outputImage.delete();
-                    }
-                    outputImage.createNewFile();
-                }catch (IOException e){
-                    e.printStackTrace();
+                String strImgPath = FileManagerUtils.getAppPath("rant") + "/";
+                String fileName = System.currentTimeMillis() + ".jpg";// 照片命名
+                File out = new File(strImgPath);
+                if (!out.exists()) {
+                    out.mkdirs();
                 }
-                if(Build.VERSION.SDK_INT >= 24){
-                    imageUri = FileProvider.getUriForFile(getActivity(),"com.xt.android.rant.provider", outputImage);
-                }
-                else {
-                    imageUri = Uri.fromFile(outputImage);
-                }
-
-//                File outputFile = new File(getActivity().getExternalCacheDir(), "rant_image_" + String.valueOf(new Date().getTime()) + ".jpg");//文件初始化
-//                filePath = outputFile.getPath();
-//                try {
-//                    outputFile.createNewFile();//创建文件
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-//                ActivityCompat.requestPermissions(getActivity(),
-//                        new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE},
-//                        1);
-
+                out = new File(strImgPath, fileName);
+                photoUri = Uri.fromFile(out);
+                tempPicPath = photoUri.getPath();
                 //检查权限
                 if(ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA)!= PackageManager.PERMISSION_GRANTED){
                     ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.CAMERA}, 1);
@@ -158,18 +143,17 @@ public class SelectPhotoFragment extends DialogFragment implements View.OnClickL
         switch (requestCode){
             case TAKE_PHOTO:
                 if(resultCode == RESULT_OK){
-//                    Bundle bundle = data.getExtras();
-//                    Bitmap bitmap = (Bitmap) bundle.get("data");
                     Bitmap bitmap = null;
                     try {
-                        bitmap = BitmapFactory.decodeStream(getActivity().getContentResolver().openInputStream(imageUri));
-                        Uri uri = Uri.parse(MediaStore.Images.Media.insertImage(getActivity().getContentResolver(), bitmap, null,null));
-
-                    } catch (FileNotFoundException e) {
+                        bitmap = Helper.getInstance().rotaingImageView(Helper.getInstance().readPictureDegree(tempPicPath), Bimp.revitionImageSize(tempPicPath));
+                    } catch (IOException e) {
                         e.printStackTrace();
                     }
-
-                    //getQiniuUpToken();
+                    if(bitmap!=null){
+                        tempPicPath = Helper.getInstance().saveMyBitmap(bitmap);
+                        filePath = tempPicPath;
+                        getQiniuUpToken();
+                    }
 
                 }
                 break;
@@ -180,12 +164,9 @@ public class SelectPhotoFragment extends DialogFragment implements View.OnClickL
         }
     }
 
-
     private void openCamera(){
-//        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-//        startActivityForResult(intent, TAKE_PHOTO);
-        Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
         startActivityForResult(intent, TAKE_PHOTO);
     }
 

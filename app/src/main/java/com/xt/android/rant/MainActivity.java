@@ -6,8 +6,10 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.net.TrafficStats;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
+import android.os.StrictMode;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -72,6 +74,16 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationB
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         sMainActivity = this;
+/**
+ * 支持Android 7.0
+ * 从Android 7.0开始，一个应用提供自身文件给其它应用使用时，如果给出一个file://格式的URI的话，应用会抛出FileUriExposedException
+ * 谷歌官方推荐的解决方案是使用FileProvider来生成一个content://格式的URI,由于我使用这种方法获取不到文件的filePath(技术有限)
+ * 所以选择置入一个不设防的VmPolicy，下面这4行代码就解决了FileUriExposedException错误
+ */
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
+            StrictMode.setVmPolicy(builder.build());
+        }
 
         Intent intent = new Intent(MainActivity.this, PullService.class);
         startService(intent);

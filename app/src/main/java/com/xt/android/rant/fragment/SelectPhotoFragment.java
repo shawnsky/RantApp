@@ -113,7 +113,13 @@ public class SelectPhotoFragment extends DialogFragment implements View.OnClickL
                     out.mkdirs();
                 }
                 out = new File(strImgPath, fileName);
-                photoUri = Uri.fromFile(out);
+
+//                if(Build.VERSION.SDK_INT>=24){
+//                    photoUri = FileProvider.getUriForFile(getActivity(), "com.xt.android.rant.provider", out);
+//                }
+//                else{
+                    photoUri = Uri.fromFile(out);
+//                }
                 tempPicPath = photoUri.getPath();
                 //检查权限
                 if(ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA)!= PackageManager.PERMISSION_GRANTED){
@@ -334,6 +340,7 @@ public class SelectPhotoFragment extends DialogFragment implements View.OnClickL
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 Log.i(TAG, "onResponse: update img url to [server] success");
+                dismiss();
             }
         });
     }

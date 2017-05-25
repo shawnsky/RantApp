@@ -2,6 +2,8 @@ package com.xt.android.rant;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.media.Image;
 import android.os.Handler;
 import android.os.Message;
@@ -21,9 +23,17 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
+import com.tencent.mm.opensdk.modelbase.BaseResp;
+import com.tencent.mm.opensdk.modelmsg.SendMessageToWX;
+import com.tencent.mm.opensdk.modelmsg.WXMediaMessage;
+import com.tencent.mm.opensdk.modelmsg.WXTextObject;
+import com.tencent.mm.opensdk.modelmsg.WXWebpageObject;
+import com.tencent.mm.opensdk.openapi.IWXAPI;
+import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 import com.xt.android.rant.adapter.CommentAdapter;
 import com.xt.android.rant.utils.SpaceItemDecoration;
 import com.xt.android.rant.utils.TokenUtil;
@@ -140,6 +150,7 @@ public class RantActivity extends AppCompatActivity implements View.OnClickListe
 
 
 
+
     private void getData(){
         mClient = new OkHttpClient();
         String ip = getResources().getString(R.string.ip_server);
@@ -233,13 +244,16 @@ public class RantActivity extends AppCompatActivity implements View.OnClickListe
                 startActivity(intent);
                 break;
             case R.id.activity_rant_share_wechat:
+                shareToWX(0);
                 break;
             case R.id.activity_rant_share_quan:
+                shareToWX(1);
                 break;
             case R.id.activity_rant_share:
+                String text = mDetailItem.getUserName()+"说: "+mDetailItem.getRantContent()+" " + "\n目前有"+mDetailItem.getCommentList().size()+"人围观，来凑个热闹吧！地址 "+getString(R.string.ip_server)+"rant.action?rantId="+mDetailItem.getRantId();
                 Intent i=new Intent(Intent.ACTION_SEND);
                 i.setType("text/plain");
-                i.putExtra(Intent.EXTRA_TEXT,mDetailItem.getRantContent());
+                i.putExtra(Intent.EXTRA_TEXT,text);
                 String server = getResources().getString(R.string.ip_server);
                 i.putExtra(Intent.EXTRA_SUBJECT,server+"rant/rant.action?rantId="+mDetailItem.getRantId());
                 i=Intent.createChooser(i,getString(R.string.rant_send_report));
@@ -299,6 +313,38 @@ public class RantActivity extends AppCompatActivity implements View.OnClickListe
         }
 
     }
+
+    /**
+     * @param flag
+     * 0 发送到会话
+     * 1 发送到朋友圈
+     */
+    private int shareToWX(int flag){
+        String text = mDetailItem.getUserName()+"说: "+mDetailItem.getRantContent()+" " + "\n目前有"+mDetailItem.getCommentList().size()+"人围观，来凑个热闹吧！";
+        final IWXAPI iwxapi = WXAPIFactory.createWXAPI(this, getString(R.string.app_id));
+        iwxapi.registerApp(getString(R.string.app_id));
+        if(!iwxapi.isWXAppInstalled()){
+            Toast.makeText(this, "你还没有安装微信", Toast.LENGTH_SHORT).show();
+            return 0;
+        }
+
+        WXWebpageObject webpage = new WXWebpageObject();
+        webpage.webpageUrl = getString(R.string.ip_server)+"rant.action?rantId="+mDetailItem.getRantId();
+        final WXMediaMessage msg = new WXMediaMessage(webpage);
+        msg.title = "Rant社区";
+        msg.description = text;
+
+        final SendMessageToWX.Req req = new SendMessageToWX.Req();
+        req.transaction = String.valueOf(System.currentTimeMillis());
+        req.scene = flag;
+        final Bitmap logo = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher);
+        msg.setThumbImage(logo);
+        req.message = msg;
+        iwxapi.sendReq(req);
+        return 1;
+    }
+
+
 
 
 }

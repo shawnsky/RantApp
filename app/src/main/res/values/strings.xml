@@ -9,6 +9,7 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
+
     <!--通用-->
     <string name="ip_server">http://120.24.92.198:8080/rant/</string>
     <string name="i_server">http://10.0.2.2:8080/</string>
@@ -113,6 +114,10 @@
     <string name="dialog_photo_title">选择照片</string>
     <string name="dialog_photo_camera">拍照</string>
     <string name="dialog_photo_album">从相册选择</string>
+
+
+    <!--微信接入-->
+    <string name="app_id">wxcdd895619e783aa4</string>
 
 
 </resources>

@@ -80,76 +80,83 @@ public class PullService extends Service {
                     Log.i(TAG, "PullService running...");
                     Thread.sleep(1000*5);//5s
 
-                    String cmtJson = download(ip+"api/getCmtNotify.action?token="+TokenUtil.getToken(LitePalApplication.getContext()));
-                    String starJson = download(ip+"api/getStarNotify.action?token="+TokenUtil.getToken(LitePalApplication.getContext()));
+                    try{
+                        String cmtJson = download(ip+"api/getCmtNotify.action?token="+TokenUtil.getToken(LitePalApplication.getContext()));
+                        String starJson = download(ip+"api/getStarNotify.action?token="+TokenUtil.getToken(LitePalApplication.getContext()));
 
-                    //用户登出，调用stopService，虽然onDestroy，但是线程在停止之前任务可能没有结束，而此时token是""所以会出现解析错误
-                    SharedPreferences sharedPreferences = LitePalApplication.getContext().getSharedPreferences("token", Activity.MODE_PRIVATE);
-                    String token = sharedPreferences.getString("token","");
-                    if(token.equals("")){
-                        Log.i(TAG, "json parse failed!");
-                        continue;
-                    }
-
-
-                    List<CmtNotifyItem> cmtNotifyItems = gson.fromJson(cmtJson, new TypeToken<List<CmtNotifyItem>>(){}.getType());
-                    List<StarNotifyItem> starNotifyItems = gson.fromJson(starJson, new TypeToken<List<StarNotifyItem>>(){}.getType());
-
-
-                  
-
-
-                    List<CmtNotifyItem> cmtNotifyItemsFromDb = DataSupport.findAll(CmtNotifyItem.class);
-                    List<StarNotifyItem> starNotifyItemsFromDb = DataSupport.findAll(StarNotifyItem.class);
-                   
-
-                    HashSet<Integer> cmtNew = new HashSet<>();
-                    HashSet<Integer> starNew = new HashSet<>();
-                    for(CmtNotifyItem c:cmtNotifyItems){
-                        cmtNew.add(c.getCommentId());
-                    }
-                    for(StarNotifyItem s:starNotifyItems){
-                        starNew.add(s.getStarId());
-                    }
-
-                    for(CmtNotifyItem c:cmtNotifyItemsFromDb){
-                        if(cmtNew.contains(c.getCommentId())){
-                            cmtNew.remove(c.getCommentId());
-
+                        //用户登出，调用stopService，虽然onDestroy，但是线程在停止之前任务可能没有结束，而此时token是""所以会出现解析错误
+                        SharedPreferences sharedPreferences = LitePalApplication.getContext().getSharedPreferences("token", Activity.MODE_PRIVATE);
+                        String token = sharedPreferences.getString("token","");
+                        if(token.equals("")){
+                            Log.i(TAG, "json parse failed!");
+                            continue;
                         }
-                    }
-                    for(StarNotifyItem s:starNotifyItemsFromDb){
-                        if(starNew.contains(s.getStarId())){
-                            starNew.remove(s.getStarId());
-                        }
-                    }
 
-                    Iterator it0 = cmtNew.iterator();
-                    Iterator it1 = starNew.iterator();
-                    if(it0.hasNext()){
-                        int target = (Integer) it0.next();
-                        cmtNew.remove(target);
+
+                        List<CmtNotifyItem> cmtNotifyItems = gson.fromJson(cmtJson, new TypeToken<List<CmtNotifyItem>>(){}.getType());
+                        List<StarNotifyItem> starNotifyItems = gson.fromJson(starJson, new TypeToken<List<StarNotifyItem>>(){}.getType());
+
+
+
+
+
+                        List<CmtNotifyItem> cmtNotifyItemsFromDb = DataSupport.findAll(CmtNotifyItem.class);
+                        List<StarNotifyItem> starNotifyItemsFromDb = DataSupport.findAll(StarNotifyItem.class);
+
+
+                        HashSet<Integer> cmtNew = new HashSet<>();
+                        HashSet<Integer> starNew = new HashSet<>();
                         for(CmtNotifyItem c:cmtNotifyItems){
-                            if(c.getCommentId()==target){
-                                pushCmtNotify(c);
-                                DataSupport.deleteAll(CmtNotifyItem.class);
-                                DataSupport.saveAll(cmtNotifyItems);
-                            }
+                            cmtNew.add(c.getCommentId());
                         }
-
-                    }
-                    if(it1.hasNext()){
-                        int target = (Integer) it1.next();
-                        starNew.remove(target);
                         for(StarNotifyItem s:starNotifyItems){
-                            if(s.getStarId()==target){
-                                pushStarNotify(s);
-                                DataSupport.deleteAll(StarNotifyItem.class);
-                                DataSupport.saveAll(starNotifyItems);
+                            starNew.add(s.getStarId());
+                        }
+
+                        for(CmtNotifyItem c:cmtNotifyItemsFromDb){
+                            if(cmtNew.contains(c.getCommentId())){
+                                cmtNew.remove(c.getCommentId());
+
+                            }
+                        }
+                        for(StarNotifyItem s:starNotifyItemsFromDb){
+                            if(starNew.contains(s.getStarId())){
+                                starNew.remove(s.getStarId());
                             }
                         }
 
+                        Iterator it0 = cmtNew.iterator();
+                        Iterator it1 = starNew.iterator();
+                        if(it0.hasNext()){
+                            int target = (Integer) it0.next();
+                            cmtNew.remove(target);
+                            for(CmtNotifyItem c:cmtNotifyItems){
+                                if(c.getCommentId()==target){
+                                    pushCmtNotify(c);
+                                    DataSupport.deleteAll(CmtNotifyItem.class);
+                                    DataSupport.saveAll(cmtNotifyItems);
+                                }
+                            }
+
+                        }
+                        if(it1.hasNext()){
+                            int target = (Integer) it1.next();
+                            starNew.remove(target);
+                            for(StarNotifyItem s:starNotifyItems){
+                                if(s.getStarId()==target){
+                                    pushStarNotify(s);
+                                    DataSupport.deleteAll(StarNotifyItem.class);
+                                    DataSupport.saveAll(starNotifyItems);
+                                }
+                            }
+
+                        }
                     }
+                    catch (Exception e){
+                        e.printStackTrace();
+                    }
+
+
 
                 } catch (InterruptedException e) {
                     e.printStackTrace();

@@ -12,6 +12,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
@@ -48,7 +49,7 @@ public class ManagerActivity extends AppCompatActivity implements SwipeRefreshLa
     private TextView mToolbarText;
     private int flag;
     /**
-     * 注意！！！这个Activity会根据不同的flag展示不同的内容
+     * 注意！！！这个Activity根据不同的flag展示不同的内容
      * FLAG
      * 我发布的 1
      * 我的评论 2
@@ -74,6 +75,7 @@ public class ManagerActivity extends AppCompatActivity implements SwipeRefreshLa
         this.setSupportActionBar(mToolbar);
         this.getSupportActionBar().setDisplayShowTitleEnabled(false);
         mToolbarText = (TextView) findViewById(R.id.activity_manager_toolbar_title);
+        mToolbar.setNavigationIcon(R.drawable.ic_action_back);
 
         //动态地设置标题
         switch (flag){
@@ -186,6 +188,15 @@ public class ManagerActivity extends AppCompatActivity implements SwipeRefreshLa
 
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case android.R.id.home:
+                onBackPressed();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
     @Override
     public void onRefresh() {

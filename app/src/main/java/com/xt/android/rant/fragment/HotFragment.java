@@ -1,4 +1,4 @@
-package com.xt.android.rant.fragment;
+﻿package com.xt.android.rant.fragment;
 
 
 import android.content.Intent;
@@ -166,6 +166,26 @@ public class HotFragment extends Fragment {
         NewAdapter adapter = new NewAdapter(hotRantList);
         mRecyclerView.setAdapter(adapter);
     }
+
+@Override
+public void onClick(View view){
+	switch(view.getId()){
+		case R.id.fragment_hot_action:
+			updateUI();
+}
+}
+}
+
+private List<DetailItem> rantSort(List<DetailItem>, int flag){
+	if(flag==0){
+		Collections.sort(list, myCmp1);
+}
+else{
+		Collections.sort(list, myCmp2);
+}
+return list;
+
+}
 
 
 

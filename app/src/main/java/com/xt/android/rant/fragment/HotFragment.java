@@ -1,4 +1,4 @@
-﻿package com.xt.android.rant.fragment;
+package com.xt.android.rant.fragment;
 
 
 import android.content.Intent;
@@ -76,8 +76,8 @@ public class HotFragment extends Fragment implements View.OnClickListener {
 
         mToolbar = (Toolbar) view.findViewById(R.id.fragment_hot_toolbar);
         AppCompatActivity activity = (AppCompatActivity) getActivity();
-        activity.getSupportActionBar().setDisplayShowTitleEnabled(false);
         activity.setSupportActionBar(mToolbar);
+        activity.getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         mSortButton = (ImageView) view.findViewById(R.id.fragment_hot_sort);
         mRecyclerView = (RecyclerView)view.findViewById(R.id.fragment_hot_recycler_view);

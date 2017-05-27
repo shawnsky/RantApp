@@ -1,4 +1,4 @@
-﻿package com.xt.android.rant.fragment;
+package com.xt.android.rant.fragment;
 
 
 import android.content.Intent;

@@ -1,10 +1,9 @@
-package com.xt.android.rant.fragment;
+﻿package com.xt.android.rant.fragment;
 
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Message;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
@@ -14,43 +13,42 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ProgressBar;
+import android.widget.ImageView;
+import android.widget.Toast;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.xt.android.rant.PostActivity;
 import com.xt.android.rant.R;
 import com.xt.android.rant.adapter.NewAdapter;
 import com.xt.android.rant.utils.SpaceItemDecoration;
-import com.xt.android.rant.utils.TokenUtil;
 import com.xt.android.rant.wrapper.RantItem;
 
 import org.litepal.crud.DataSupport;
 
-import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
-import okhttp3.Call;
-import okhttp3.Callback;
 import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class HotFragment extends Fragment {
+public class HotFragment extends Fragment implements View.OnClickListener {
 
     private static final int MSG_GET_RANT_LIST = 0;
     private static final String TAG = "HotFragment";
     private Toolbar mToolbar;
     private RecyclerView mRecyclerView;
     private FloatingActionButton mFAB;
+    private ImageView mSortButton;
+    private int sortFlag;
 
     private String mJson;
     private OkHttpClient mClient;
     private Handler mHandler;
+
+    private List<RantItem> hotRantList;
 
 
     public static HotFragment newInstance(String param1) {
@@ -81,7 +79,7 @@ public class HotFragment extends Fragment {
         activity.getSupportActionBar().setDisplayShowTitleEnabled(false);
         activity.setSupportActionBar(mToolbar);
 
-
+        mSortButton = (ImageView) view.findViewById(R.id.fragment_hot_sort);
         mRecyclerView = (RecyclerView)view.findViewById(R.id.fragment_hot_recycler_view);
         mFAB = (FloatingActionButton) view.findViewById(R.id.fragment_hot_fab);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
@@ -91,37 +89,20 @@ public class HotFragment extends Fragment {
 
 
         List<RantItem> rantItemsFromDatabase = DataSupport.findAll(RantItem.class);
-        List<RantItem> hotRantList = new ArrayList<>();
+        hotRantList = new ArrayList<>();
         for(RantItem rantItem:rantItemsFromDatabase){
             if(Math.abs(rantItem.getRantValue())>=5 || rantItem.getCommentsNum()>=5) hotRantList.add(rantItem);
         }
+
+
         NewAdapter adapter = new NewAdapter(hotRantList);
         mRecyclerView.setAdapter(adapter);
 
+        sortFlag = 1;
 
 
-        //getData();
-
-//        mHandler = new Handler(){
-//            @Override
-//            public void handleMessage(Message msg) {
-//                switch (msg.what){
-//                    case MSG_GET_RANT_LIST:
-//                        convertJson2UI(mJson);
-//
-//                        break;
-//                }
-//            }
-//        };
-
-
-        mFAB.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getActivity(), PostActivity.class);
-                startActivity(intent);
-            }
-        });
+        mSortButton.setOnClickListener(this);
+        mFAB.setOnClickListener(this);
 
 
 
@@ -130,41 +111,55 @@ public class HotFragment extends Fragment {
         return view;
     }
 
-
-    private void getData(){
-        String ip = getActivity().getResources().getString(R.string.ip_server);
-        mClient = new OkHttpClient();
-        Request request = new Request.Builder()
-                .url(ip+"api/allRants.action?token="+ TokenUtil.getToken(getActivity()))
-                .build();
-        Call call = mClient.newCall(request);
-        call.enqueue(new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-
-            }
-
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                String jsonBody = response.body().string();
-                mJson = jsonBody;
-                mHandler.sendEmptyMessage(MSG_GET_RANT_LIST);
-
-            }
-        });
-
-    }
-
-    private void convertJson2UI(String body){
-        Gson gson = new Gson();
-        List<RantItem> rantItemList = gson.fromJson(body, new TypeToken<List<RantItem>>(){}.getType());
-        //list过滤
-        List<RantItem> hotRantList = new ArrayList<>();
-        for(RantItem rantItem:rantItemList){
-            if(Math.abs(rantItem.getRantValue())>=5 || rantItem.getCommentsNum()>=5) hotRantList.add(rantItem);
-        }
+    private void updateUI(){
         NewAdapter adapter = new NewAdapter(hotRantList);
         mRecyclerView.setAdapter(adapter);
+        Toast.makeText(getActivity(),
+                sortFlag==1?getActivity().getString(R.string.hot_sort_toast):getActivity().getString(R.string.hot_sort_toast_value),
+                Toast.LENGTH_SHORT).show();
+    }
+
+
+    @Override
+    public void onClick(View view){
+	switch(view.getId()){
+        case R.id.fragment_hot_sort:
+			hotRantList = rantSort(hotRantList,sortFlag);
+            sortFlag = -sortFlag;
+            updateUI();
+            break;
+        case R.id.fragment_hot_fab:
+            Intent intent = new Intent(getActivity(), PostActivity.class);
+            startActivity(intent);
+            break;
+
+    }
+    }
+
+
+    /**
+     * -1 value
+     * 1 comments number
+     * @param flag
+     */
+
+    private List<RantItem> rantSort(List<RantItem> list, int flag){
+	    if(flag==1){
+		    Collections.sort(list, new Comparator<RantItem>() {
+                @Override
+                public int compare(RantItem rantItem, RantItem t1) {
+                    return rantItem.getCommentsNum()-t1.getCommentsNum();
+                }
+            });
+    } else{
+		Collections.sort(list, new Comparator<RantItem>() {
+            @Override
+            public int compare(RantItem rantItem, RantItem t1) {
+                return rantItem.getRantValue() - t1.getRantValue();
+            }
+        });
+    }
+        return list;
     }
 
 

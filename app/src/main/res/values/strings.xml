@@ -51,6 +51,8 @@
 
     <!--最热界面-->
     <string name="hot_title">最热</string>
+    <string name="hot_sort_toast">评论数从高到低显示</string>
+    <string name="hot_sort_toast_value">被赞数从高到低显示</string>
 
 
     <!--通知界面-->

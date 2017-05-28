@@ -12,6 +12,7 @@ import android.graphics.BitmapFactory;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
@@ -81,14 +82,21 @@ public class PullService extends Service {
                     Thread.sleep(1000*5);//5s
 
                     try{
-                        String cmtJson = download(ip+"api/getCmtNotify.action?token="+TokenUtil.getToken(LitePalApplication.getContext()));
-                        String starJson = download(ip+"api/getStarNotify.action?token="+TokenUtil.getToken(LitePalApplication.getContext()));
+                        Response cmt = download(ip+"api/getCmtNotify.action?token="+TokenUtil.getToken(LitePalApplication.getContext()));
+                        Response star = download(ip+"api/getStarNotify.action?token="+TokenUtil.getToken(LitePalApplication.getContext()));
+                        String cmtJson = cmt.body().string();
+                        String starJson = star.body().string();
 
                         //用户登出，调用stopService，虽然onDestroy，但是线程在停止之前任务可能没有结束，而此时token是""所以会出现解析错误
                         SharedPreferences sharedPreferences = LitePalApplication.getContext().getSharedPreferences("token", Activity.MODE_PRIVATE);
                         String token = sharedPreferences.getString("token","");
                         if(token.equals("")){
                             Log.i(TAG, "json parse failed!");
+                            continue;
+                        }
+
+                        //如果服务器错误
+                        if(cmt.code()==500 || cmt.code()==500){
                             continue;
                         }
 
@@ -165,14 +173,14 @@ public class PullService extends Service {
         }
     }
 
-    public String download(String url)  {
+    public Response download(String url)  {
        try {
            OkHttpClient client = new OkHttpClient();
            Request request = new Request.Builder()
                    .url(url)
                    .build();
            Response response = client.newCall(request).execute();
-           return response.body().string();
+           return response;
        }
        catch (Exception e){
            e.printStackTrace();

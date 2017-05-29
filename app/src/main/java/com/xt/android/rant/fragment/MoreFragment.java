@@ -22,22 +22,15 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.squareup.picasso.Picasso;
 import com.xt.android.rant.LauncherActivity;
-import com.xt.android.rant.MainActivity;
 import com.xt.android.rant.ManagerActivity;
 import com.xt.android.rant.ProfileActivity;
 import com.xt.android.rant.R;
+import com.xt.android.rant.VersionActivity;
 import com.xt.android.rant.service.PullService;
 import com.xt.android.rant.utils.TokenUtil;
-import com.xt.android.rant.wrapper.CmtNotifyItem;
-import com.xt.android.rant.wrapper.RantItem;
-import com.xt.android.rant.wrapper.StarNotifyItem;
 import com.xt.android.rant.wrapper.User;
-
-import org.litepal.crud.DataSupport;
-import org.litepal.tablemanager.Connector;
 
 import java.io.IOException;
 
@@ -228,6 +221,8 @@ public class MoreFragment extends Fragment implements View.OnClickListener{
                 getActivity().startActivity(ManagerActivity.newIntent(getActivity(), 4));
                 break;
             case R.id.fragment_more_ll_5:
+                Intent i=new Intent(getActivity(), VersionActivity.class);
+                startActivity(i);
                 break;
             case R.id.fragment_more_btn_logout:
 

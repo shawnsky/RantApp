@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_version"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.xt.android.rant.VersionActivity">
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:src="@drawable/timg"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center"
+        android:text="版本号：1.0"
+        android:textSize="20sp"
+        android:layout_marginTop="320dp"
+        android:layout_marginBottom="32dp"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center"
+        android:text="使用介绍：无"
+        android:textSize="20sp"
+        android:layout_marginTop="350dp"
+        android:layout_marginBottom="32dp"/>
+
+
+</RelativeLayout>
+
+
+
+
+
+
+
+

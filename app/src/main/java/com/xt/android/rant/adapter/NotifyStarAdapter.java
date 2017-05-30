@@ -2,7 +2,6 @@ package com.xt.android.rant.adapter;
 
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +14,6 @@ import com.xt.android.rant.MainActivity;
 import com.xt.android.rant.ProfileActivity;
 import com.xt.android.rant.R;
 import com.xt.android.rant.RantActivity;
-import com.xt.android.rant.wrapper.CmtNotifyItem;
 import com.xt.android.rant.wrapper.StarNotifyItem;
 
 import java.io.IOException;
@@ -27,8 +25,6 @@ import okhttp3.Callback;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
-
-import static com.xt.android.rant.R.id.item_notify_cmt_tv_rant_content;
 
 /**
  * Created by admin on 2017/5/11.
@@ -116,7 +112,7 @@ public class NotifyStarAdapter extends RecyclerView.Adapter<NotifyStarAdapter.Vi
 
                 @Override
                 public void onResponse(Call call, Response response) throws IOException {
-                    Log.i(TAG, "onResponse: "+response.body().string());
+
                 }
             });
         }

@@ -1,22 +1,15 @@
 package com.xt.android.rant;
 
-import android.app.Activity;
 import android.content.Intent;
-
-import android.content.SharedPreferences;
-import android.graphics.Color;
-import android.net.TrafficStats;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.StrictMode;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-
 
 import com.ashokvarma.bottomnavigation.BadgeItem;
 import com.ashokvarma.bottomnavigation.BottomNavigationBar;
@@ -24,20 +17,17 @@ import com.ashokvarma.bottomnavigation.BottomNavigationItem;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.xt.android.rant.fragment.HotFragment;
-import com.xt.android.rant.fragment.LoginFragment;
 import com.xt.android.rant.fragment.MoreFragment;
 import com.xt.android.rant.fragment.NewFragment;
 import com.xt.android.rant.fragment.NotifyFragment;
 import com.xt.android.rant.service.PullService;
 import com.xt.android.rant.utils.TokenUtil;
 import com.xt.android.rant.wrapper.CmtNotifyItem;
-import com.xt.android.rant.wrapper.RantItem;
 import com.xt.android.rant.wrapper.StarNotifyItem;
 
 import org.litepal.crud.DataSupport;
 
 import java.io.IOException;
-import java.util.Date;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -129,12 +119,8 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationB
                         Log.i(TAG, "handleMessage: both cmt and star notifies have been downloaded");
                         mTimer.cancel();
                         Gson gson = new Gson();
-                        Log.i(TAG, "handleMessage: "+TokenUtil.getToken(MainActivity.this));
-                        Log.i(TAG, "handleMessage: "+cmtJson);
                         List<CmtNotifyItem> cmtNotifyItems = gson.fromJson(cmtJson, new TypeToken<List<CmtNotifyItem>>(){}.getType());
                         List<StarNotifyItem> starNotifyItems = gson.fromJson(starJson, new TypeToken<List<StarNotifyItem>>(){}.getType());
-                        Log.i(TAG, "handleMessage: cmtSize="+cmtNotifyItems.size());
-                        Log.i(TAG, "handleMessage: starSize="+starNotifyItems.size());
                         DataSupport.deleteAll(CmtNotifyItem.class);
                         DataSupport.deleteAll(StarNotifyItem.class);
                         DataSupport.saveAll(cmtNotifyItems);

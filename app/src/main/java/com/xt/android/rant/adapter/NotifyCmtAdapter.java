@@ -2,7 +2,6 @@ package com.xt.android.rant.adapter;
 
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,10 +21,8 @@ import java.util.List;
 
 import okhttp3.Call;
 import okhttp3.Callback;
-import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import okhttp3.RequestBody;
 import okhttp3.Response;
 
 import static com.xt.android.rant.R.id.item_notify_cmt_tv_rant_content;
@@ -105,7 +102,7 @@ public class NotifyCmtAdapter extends RecyclerView.Adapter<NotifyCmtAdapter.View
 
                         @Override
                         public void onResponse(Call call, Response response) throws IOException {
-                            Log.i(TAG, "onResponse: "+response.body().string());
+
                         }
                     });
                 }

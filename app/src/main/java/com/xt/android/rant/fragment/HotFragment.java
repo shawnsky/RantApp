@@ -3,7 +3,6 @@ package com.xt.android.rant.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
@@ -29,8 +28,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import okhttp3.OkHttpClient;
-
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -44,9 +41,6 @@ public class HotFragment extends Fragment implements View.OnClickListener {
     private ImageView mSortButton;
     private int sortFlag;
 
-    private String mJson;
-    private OkHttpClient mClient;
-    private Handler mHandler;
 
     private List<RantItem> hotRantList;
 

@@ -62,7 +62,8 @@
                 android:resource="@xml/file_paths" />
         </provider>
 
-        <activity android:name=".VersionActivity"></activity>
+        <activity android:name=".AboutActivity"
+                  android:theme="@style/Theme.AppCompat.Light.NoActionBar"></activity>
     </application>
 
 </manifest>

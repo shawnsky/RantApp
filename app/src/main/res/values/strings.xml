@@ -117,6 +117,13 @@
     <string name="dialog_photo_camera">拍照</string>
     <string name="dialog_photo_album">从相册选择</string>
 
+    <!--关于界面-->
+    <string name="about_title">关于Rant</string>
+    <string name="about_version">Rant v1.0</string>
+    <string name="about_intro">Rant社区是一个有趣的地方，你可以在这里分享身边趣事，发泄心中的不满或者是向他人求助。</string>
+    <string name="about_contact">联系我们</string>
+    <string name="about_email">tlyluvu@gmail.com</string>
+
 
     <!--微信接入-->
     <string name="app_id">wxcdd895619e783aa4</string>

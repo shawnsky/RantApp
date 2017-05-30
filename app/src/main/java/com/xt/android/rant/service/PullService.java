@@ -87,6 +87,11 @@ public class PullService extends Service {
                         String cmtJson = cmt.body().string();
                         String starJson = star.body().string();
 
+                        //如果服务器错误
+                        if(cmt.code()==500 || cmt.code()==500){
+                            continue;
+                        }
+
                         //用户登出，调用stopService，虽然onDestroy，但是线程在停止之前任务可能没有结束，而此时token是""所以会出现解析错误
                         SharedPreferences sharedPreferences = LitePalApplication.getContext().getSharedPreferences("token", Activity.MODE_PRIVATE);
                         String token = sharedPreferences.getString("token","");
@@ -95,10 +100,7 @@ public class PullService extends Service {
                             continue;
                         }
 
-                        //如果服务器错误
-                        if(cmt.code()==500 || cmt.code()==500){
-                            continue;
-                        }
+
 
 
                         List<CmtNotifyItem> cmtNotifyItems = gson.fromJson(cmtJson, new TypeToken<List<CmtNotifyItem>>(){}.getType());

@@ -1,5 +1,4 @@
 # Rant社区App
----
 ### 下载
 前往酷安应用市场下载体验 
 [下载](http://www.coolapk.com/apk/com.xt.android.rant)
